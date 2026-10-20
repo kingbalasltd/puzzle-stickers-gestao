@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.wrangler/
+test/out/
+*.log
+.env*
+.DS_Store
+
+# Dados reais da empresa e documentos de fornecedores: ficam fora do repositório.
+admin/dados/
+admin/ficheiros/
+test/fixtures/*.pdf
+test/fixtures/*.xlsx
+
+# Gotham é uma fonte comercial (licença da empresa): copiar os ficheiros para public/fonts/.
+public/fonts/gotham-*
