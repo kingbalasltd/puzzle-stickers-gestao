@@ -143,7 +143,7 @@ export async function imprimirCotacao(c: Cotacao, d: Dados) {
         </div>
       ))}
     </>,
-    // Named like his own files (Puzzle_Stickers_Cotação_<Cliente>_<Assunto>): client + subject, never the app's code.
+    // Named like the company's own files (Puzzle_Stickers_Cotação_<Cliente>_<Assunto>): client + subject, never the app's code.
     ['Puzzle_Stickers_Cotação', cli?.nome, c.itens[0]?.subtitulo || c.itens[0]?.titulo].filter(Boolean).join('_').replace(/[\s/\:]+/g, '_')
   )
 }

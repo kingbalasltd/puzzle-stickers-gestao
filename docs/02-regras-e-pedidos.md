@@ -44,7 +44,7 @@ Notas de leitura:
 ### A1. Numeração das cotações e requisições
 
 - **Formato:** `COT-002-OUT/26` e `REQ-001-OUT/26`. O número tem o prefixo, 3 dígitos, o mês abreviado (JAN … DEZ) e o ano com 2 dígitos.
-- **Contagem:** recomeça todos os meses. O número novo é o maior do mesmo mês e prefixo, mais 1 (`numeroDoMes` em `src/calc.ts`). O teste está em `src/calc.test.ts`: "numbers quotes and orders Momad's way, restarting every month".
+- **Contagem:** recomeça todos os meses. O número novo é o maior do mesmo mês e prefixo, mais 1 (`numeroDoMes` em `src/calc.ts`). O teste está em `src/calc.test.ts`: "numbers quotes and orders per month, restarting every month".
 - **Quando é atribuído:** quando o registo é criado, com a data desse dia. Acontece em três sítios:
   - nova cotação: `novaCotacao`, em `src/pages/Cotacoes.tsx`;
   - cotação feita a partir de um trabalho: `fazerCotacao`, em `src/pages/Trabalho.tsx`;
@@ -176,14 +176,14 @@ Notas de leitura:
   - Exemplo: "Inclui Laterais, Capom, Bumper Frontal e Traseiro, Tejadilho, Bagageira e Stickers Complementares".
 - **Texto de cada linha gerada:**
   - Linha 1: a marca do material (ex.: "Taksim®"). Com várias opções, o PDF imprime "OPÇÃO n - <marca>".
-  - Linha 2, a negrito: o serviço e a viatura (ex.: "Full Wrap Nissan Silvia S15").
+  - Linha 2, a negrito: o serviço e a viatura (ex.: "Full Wrap Toyota Corolla").
   - Descrição:
     - primeira linha automática "<Serviço> <Estilos> em Viatura <viatura>". É editável e tem o botão "Voltar ao texto automático";
     - `** <cobertura>`;
     - a frase "Inclui…";
     - "Impresso em vynil com aplicação do respectivo protector material 100% dedicado a wrap."
   - Depois vêm o material a vermelho (A8) e a nota de layout (A14).
-- **Outros objectos:** a caixa "É uma viatura" desliga-se para objectos que não são viaturas (ex.: um congelador com as medidas).
+- **Outros objectos:** a caixa "É uma viatura" desliga-se para objectos que não são viaturas (ex.: um expositor com as medidas).
 - O botão "Juntar à cotação (N opções)" põe as linhas na cotação.
 
 ### A8. Materiais: Certificado / Não Certificado e garantia
@@ -232,8 +232,8 @@ Notas de leitura:
 - **Valor da linha:** cada linha tem "Qt.", e o Valor Total é Qt × Valor Unitário. No PDF a quantidade sai com dois dígitos ("01").
 - **No gerador:** o campo "Qt." fica ao lado da viatura.
   - Exemplo: branding em 5 viaturas → cada opção vale 5 × o preço por viatura.
-  - O formulário mostra a conta enquanto se escreve (ex.: "5 × = 225.000,00 MT").
-  - A linha recolhida mostra "5 × 45.000,00 MT".
+  - O formulário mostra a conta enquanto se escreve (ex.: "5 × = 200.000,00 MT").
+  - A linha recolhida mostra "5 × 40.000,00 MT".
 - **Teste:** "sums each option across several cars" (`src/calc.test.ts`).
 
 ### A11. Taxa de urgência
@@ -287,7 +287,7 @@ Notas de leitura:
   - `** Layout já definido`;
   - `** Layout já definido pelo cliente`;
   - `** Layout já definido pelo Cliente (Inclui melhoria, ou criação de novo Layout)`.
-- **Título de secção:** faixa sem valores (ex.: "PROJECTO GESTÃO MENSAL"). Nunca vira trabalho.
+- **Título de secção:** faixa sem valores (ex.: "SERVIÇOS MENSAIS"). Nunca vira trabalho.
 - **Validade:** 30 dias por defeito (`Empresa.validadeCotacao`). A lista mostra "expirou" quando uma cotação enviada passou do prazo.
 - **Aspecto:**
   - Sempre A4, sem fotografias do trabalho. O Momad envia as imagens à parte.
@@ -341,7 +341,7 @@ Notas de leitura:
 - **Contas** (`totaisRequisicao` em `src/calc.ts`, `totaisLinhas` em `src/requisicaoPdf.tsx`):
   - Para cada linha: Qt × largura × comprimento = m², e m² × preço/m² = valor sem IVA.
   - No fim soma-se o IVA de 16%, com a caixa "Fornecedor cobra IVA (16%)" marcada. A caixa vem marcada por defeito.
-  - Teste: 8,58 m² em Bundle Wrap = 17.160 MT (`src/requisicaoPdf.render.test.tsx`).
+  - Teste: 7,92 m² em Bundle Wrap = 15.840 MT (`src/requisicaoPdf.render.test.tsx`).
 - **Documento** (`PaginaRequisicao`), layout aprovado pelo Momad:
   - título "REQUISIÇÃO DE PRINTS";
   - na caixa do fornecedor, só o logótipo (`public/img/academica.png` para a Académica; nos outros fornecedores, o nome);
@@ -372,11 +372,11 @@ Notas de leitura:
 - **Resultado do mês** (`resultadoDoMes`):
   - Conta a despesa fixa no mês a que se refere (`Despesa.mes`), não na data em que foi paga.
   - Conta as requisições na data delas, sem os rascunhos.
-- **Teste:** "pays Momad's fixed expenses from the 25th to the 5th of the next month".
+- **Teste:** "pays fixed expenses from the 25th to the 5th of the next month".
 
 ### A18. Caixa
 
-- **Pedido do Momad (16 Out):** "como se eu tivesse ali um caixa".
+- **Regra (16 Out):** a app mostra o dinheiro da empresa como uma caixa: quanto há, o que entrou e o que saiu.
 - **Movimentos** (`movimentosCaixa` em `src/calc.ts`):
   - Entradas: pagamentos de clientes e reposições de gastos pessoais.
   - Saídas: compras, despesas fixas pagas, pagamentos a fornecedores (`Requisicao.pagamentos`) e gastos pessoais.
@@ -400,13 +400,13 @@ Notas de leitura:
 
 ### A19. Gastos pessoais: repor ou autorizar
 
-- **Regra (18 Out):** são gastos pessoais do Momad pagos com dinheiro da empresa. Saem do caixa, mas não são custo do negócio.
+- **Regra (18 Out):** são gastos pessoais do dono pagos com dinheiro da empresa. Saem do caixa, mas não são custo do negócio.
 - **Onde:** Finanças → Pessoal (`src/pages/Pessoal.tsx`), só para o dono.
 - **Dados:** `Despesa.pessoal = true`, categoria "Pessoal", sem IVA.
 - **Fora das contas:** ficam fora da lista de Despesas e do resultado do mês (`resultadoDoMes`).
 - **Como se resolvem:** cada gasto fica "por resolver" até uma destas acções:
   - "Repor": grava `pessoalEstado = 'reposto'` e `pessoalEm`. O dinheiro volta a entrar no caixa nesse dia, como "Reposição pessoal".
-  - "Autorizar": grava `pessoalEstado = 'autorizado'`. Fica como uso dele e não volta ao caixa.
+  - "Autorizar": grava `pessoalEstado = 'autorizado'`. Fica como uso do dono e não volta ao caixa.
   - Com mais de um gasto por resolver há também "Repor tudo" e "Autorizar tudo". No gasto há "Voltar a por resolver".
 - **Resumo:** mostra o cartão "Gastos pessoais por resolver". O cartão Entrou indica "clientes + X repostos por si".
 
@@ -434,7 +434,7 @@ Notas de leitura:
 
 ### A21. Uma só palavra-passe
 
-- **Regra (18 Out):** "uma palavra-passe, nada mais".
+- **Regra (18 Out):** a entrada pede só a palavra-passe da empresa.
 - **Ecrã de entrada** (`Ligar` em `src/App.tsx`):
   - Pede só a "Palavra-passe".
   - O código da empresa fica escondido em "Outra empresa".
@@ -460,7 +460,7 @@ A 19 de Outubro o Momad pediu que o trabalho funcione como um dossier, com tudo 
 | Ponto | O que o Momad pediu | Partes do plano (B2) |
 |---|---|---|
 | 1 | **Requisição como a cotação:** ver o A4 antes de enviar, guardar só quando algo muda, e o sistema saber se a lista já foi enviada | Parte 4 |
-| 2 | **Faturas da produção e o trabalho com tudo:** onde registar a fatura que pagou à Académica (o caso real do lote 2), pagar com comprovativo, e ver no trabalho as faturas do cliente separadas das da produção | Partes 1 e 2 |
+| 2 | **Faturas da produção e o trabalho com tudo:** onde registar a fatura que pagou à Académica, pagar com comprovativo, e ver no trabalho as faturas do cliente separadas das da produção | Partes 1 e 2 |
 | 3 | **Trabalho como conjunto:** cotação, requisição, pró-forma, pagamentos, faturas e recibos visíveis dentro do trabalho | Parte 2 |
 | 4 | **Estado e pagamento por parte:** cada parte com o seu estado, partes feitas na empresa sem custo (ex.: o logotipo), e o caso "o cliente pagou só o logotipo" | Partes 5 e 6 (e a cadeia de versões da Parte 3) |
 | 5 | **Negociar a cotação com versões:** "Editar" corrige erros e "Negociar" cria uma versão nova ligada à anterior (ex.: 10 camiões passam a 5). A primeira fica registada como enviada | Parte 3 |
@@ -481,14 +481,14 @@ A 19 de Outubro o Momad pediu que o trabalho funcione como um dossier, com tudo 
 
 | Ordem | Parte | Pontos | Esforço |
 |---|---|---|---|
-| 1 | Lote 2 hoje: fatura da Académica sem pró-forma, pagamento com comprovativo, fase "Fatura por pagar", entradas a partir do trabalho | 2 | médio |
+| 1 | Fatura da produção sem pró-forma: pagamento com comprovativo, fase "Fatura por pagar", entradas a partir do trabalho | 2 | médio |
 | 2 | Dossier do trabalho: cartão "Percurso" e histórico completo | 2, 3 | médio |
 | 3 | Cotação: "Enviada" com data, botão "Negociar" separado de "Editar", cadeia de versões | 5, 4 | médio |
 | 4 | Requisição como a cotação: faixa de estado, preview A4, "enviada" ao partilhar, Guardar só se mudou | 1 | médio |
 | 5 | Partes com identidade: estado por parte, "feito na empresa / sem custo", ligação à requisição e à linha da cotação | 4 | grande |
 | 6 | Pagamento do cliente por parte ("pagou só o logotipo") | 4 | pequeno |
 
-#### Parte 1 — Lote 2: fatura da Académica sem pró-forma
+#### Parte 1 — Fatura da produção sem pró-forma
 
 - **Hoje** (verificado em `src/pages/RequisicaoForm.tsx` e `src/calc.ts`):
   - O Passo 3 "Pagamento ao fornecedor" recusa pagar sem pró-forma ou crédito ("Primeiro registe a pró-forma").
@@ -601,7 +601,7 @@ A 19 de Outubro o Momad pediu que o trabalho funcione como um dossier, com tudo 
   - Aceitar a cotação substitui todas as partes.
   - Requisições e custos só se ligam ao trabalho.
   - Há uma fase por trabalho.
-  - Os lotes de um cliente com 3 fases estão como 3 trabalhos com a mesma cotação.
+  - Os lotes de um mesmo cliente estão hoje como trabalhos separados que partilham a cotação.
 - **Proposta:**
   - **Tabela de partes** com duas colunas novas:
     - "Estado": Por iniciar, Em curso, Feito ou Entregue.
@@ -643,7 +643,7 @@ A 19 de Outubro o Momad pediu que o trabalho funcione como um dossier, com tudo 
   - As cotações vêm ordenadas pelo número em texto (`src/state.tsx`). Entre meses essa ordem falha: "COT-001-NOV/26" fica antes de "COT-003-OUT/26".
   - A cadeia de versões tem de seguir as ligações (`substituiId`), nunca o número.
   - Recomenda-se número novo para a versão negociada e não um sufixo "v2". O sufixo partiria `renumerar` em `src/seed.ts` e o PDF.
-- **Cotação partilhada:** há uma cotação real ligada a 3 trabalhos. O "Negociar" tem de perguntar que trabalhos passam a apontar para a nova.
+- **Cotação partilhada:** uma cotação pode estar ligada a vários trabalhos. O "Negociar" tem de perguntar que trabalhos passam a apontar para a nova.
 - **Importação em massa:** `src/pages/Importar.tsx` (`ImportarModal`, `BotaoCarregar`) existe, mas não está ligado a nenhuma página. Nunca correu com dados reais e não lê imagens digitalizadas.
 
 ### B4. Perguntas por responder ao Momad
@@ -655,7 +655,7 @@ A 19 de Outubro o Momad pediu que o trabalho funcione como um dossier, com tudo 
 5. **Requisição:** chega melhorar a janela actual (faixa de estado, preview, "enviada" ao partilhar, Guardar só se mudou)? Ou prefere uma página inteira, como a cotação?
 6. **Custo e lucro:** quando a fatura da Académica difere da lista, o custo e o lucro do trabalho passam a usar a fatura (sem IVA)? Hoje usam sempre a lista. A app mostraria "lista X · fatura Y".
 7. **Estado das partes:** chega um estado simples por parte (por iniciar / em curso / feito / entregue), com as fases a continuarem por trabalho? Ou prefere as fases completas em cada parte?
-8. **Encomendas em lotes** (ex.: vários camiões do mesmo cliente feitos por fases): cada lote continua a ser um trabalho separado (Fase 1/2/3)? Ou passam a 1 trabalho com 8 camiões e partes "Lote 1/2/3"?
+8. **Encomendas em lotes** (ex.: vários camiões do mesmo cliente feitos por fases): cada lote continua a ser um trabalho separado? Ou passam a 1 trabalho com uma parte por lote?
 9. **"Pagou só o logotipo":** basta marcar cada pagamento como "da parte X" (uma parte por pagamento)? Ou é preciso repartir um pagamento entre várias partes?
 10. **Requisição "Várias"** (uma lista da Académica para vários trabalhos): continua só no Mapa de crédito, ou deve ficar ligada a mais de um trabalho e aparecer em cada um?
 11. **Ficheiros na nuvem:** faturas, recibos e comprovativos ficam só no aparelho onde são carregados (o computador não vê o que foi carregado no telemóvel). Fica assim por agora, ou a nuvem de ficheiros entra neste plano?
@@ -695,7 +695,7 @@ A 19 de Outubro o Momad pediu que o trabalho funcione como um dossier, com tudo 
   - **Lista de materiais da cotação:** é fixa (`MATERIAIS_COTACAO`). A caixa "Guardar na lista de materiais" de "Outro material" ainda não grava nada. Está prevista uma lista guardada nos dados da empresa.
   - **Frase fiscal na requisição:** o PDF da requisição não leva "Não serve de comprovativo fiscal". Falta confirmar com o Momad, e se preciso com o contabilista, se deve levar.
   - **Equipa:** os perfis e os relatórios diários existem, mas por agora só o Momad usa a app. Os acessos da equipa ficam para quando houver equipa.
-  - **Fonte Gotham:** é uma fonte comercial. Não está neste repositório; o site publicado serve os ficheiros a partir de `public/fonts`. Falta confirmar que a licença cobre o uso na web.
+  - **Fonte Gotham:** é uma fonte comercial e não está neste repositório. Os ficheiros copiam-se para `public/fonts/` (ver capítulo 3).
 
 ### B6. Estado de cada pedido
 
@@ -704,7 +704,7 @@ Legenda: **Feito** = já funciona na app; **Planeado** = plano feito, à espera 
 | # | Pedido | Pedido em | Estado | Próximo passo |
 |---|---|---|---|---|
 | 1 | Requisição como a cotação | 19 Out | Planeado (Parte 4) | OK do Momad e pergunta 5 |
-| 2 | Faturas da produção / lote 2 | 19 Out | Planeado (Partes 1 e 2) | OK do Momad e perguntas 6, 11 e 12 |
+| 2 | Faturas da produção | 19 Out | Planeado (Partes 1 e 2) | OK do Momad e perguntas 6, 11 e 12 |
 | 3 | Trabalho como conjunto (dossier) | 19 Out | Planeado (Parte 2) | OK do Momad e pergunta 10 |
 | 4 | Estado e pagamento por parte | 19 Out | Planeado (Partes 5 e 6) | OK do Momad e perguntas 7, 8 e 9 |
 | 5 | Negociar a cotação com versões | 19 Out | Planeado (Parte 3) | OK do Momad e perguntas 1 a 4 |

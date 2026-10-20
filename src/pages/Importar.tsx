@@ -23,7 +23,7 @@ type Resultado = {
 
 const TIPO_DOC = { proforma: 'Pró-forma', fatura: 'Fatura', recibo: 'Recibo' }
 
-// "Carregar ficheiros": he drops his lists (Excel/PDF) and Académica's
+// "Carregar ficheiros": the user drops the company's lists (Excel/PDF) and Académica's
 // pró-formas/faturas/recibos; each one is read and linked to the right place.
 export function ImportarModal({ trabalhoId, onClose }: { trabalhoId?: string; onClose: () => void }) {
   const d = useDados()
@@ -116,7 +116,7 @@ export function ImportarModal({ trabalhoId, onClose }: { trabalhoId?: string; on
       await db.documentos.put(novoDoc)
       patch = doc.tipo === 'fatura' ? { faturaDocId: novoDoc.id } : { reciboDocId: novoDoc.id }
       msg = `${TIPO_DOC[doc.tipo]} ${doc.numero} guardada${doc.tipo === 'fatura' ? ' · conta no IVA dedutível' : ''}`
-      // A receipt means it was paid: close the balance if he says so.
+      // A receipt means it was paid: close the balance if the user confirms.
       const saldo = saldoRequisicao(r, taxa)
       if (doc.tipo === 'recibo' && x.pago && saldo > 0) {
         patch.pagamentos = [...(r.pagamentos || []), { id: uid(), data: doc.data || hojeISO(), valor: Math.min(saldo, total), metodo: 'Transferência', referencia: `Recibo ${doc.numero}` }]

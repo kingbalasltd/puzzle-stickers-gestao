@@ -5,8 +5,8 @@ import { PaginaCotacao, paginar, type Medir } from './cotacaoPdf'
 import { EMPRESA } from './seed'
 import type { Cliente, Cotacao } from './db'
 
-// Renders the reference quote (14 Oct) to test/out/cotacao.html so it can be
-// printed with Chrome and compared pixel by pixel with his Illustrator PDF.
+// Renders a sample quote to test/out/cotacao.html so it can be printed with Chrome
+// and compared with the company's quote template.
 const adv = JSON.parse(fs.readFileSync('test/fixtures/gotham-advances.json', 'utf8')) as Record<string, Record<string, number>>
 const medir: Medir = (t, e) => {
   const tab = adv[`${e.peso}${e.italico ? 'i' : ''}`]
@@ -15,18 +15,18 @@ const medir: Medir = (t, e) => {
 
 const BR = (carro: string, layout: string) => `Branding Corporativo em ${carro}\n** Cobertura até 30% dos painéis\nInclui Laterais e Logotipo no “Chapéu”\n** Layout ${layout}`
 const exemplo = {
-  id: 'r', createdAt: '', updatedAt: '', numero: 'COT-002-OUT/26', data: '2026-10-14', clienteId: 'c', validadeDias: 30, estado: 'enviada', notas: EMPRESA.notaCotacao, notaMaterial: true,
+  id: 'r', createdAt: '', updatedAt: '', numero: 'COT-001-JAN/26', data: '2026-01-15', clienteId: 'c', validadeDias: 30, estado: 'enviada', notas: EMPRESA.notaCotacao, notaMaterial: true,
   itens: [
-    { qt: 1, titulo: 'Logotipo', subtitulo: 'Vectorização', descricao: 'Vectorização do Logotipo e Melhoria\n** Entregue em formato digital pronto para uso comum e produção', precoUnit: 7500 },
-    { qt: 4, titulo: 'Branding em Camião - Taksim Wrap®', subtitulo: 'Freightliner Argosy', descricao: BR('Freightliner Argosy', 'já definido'), precoUnit: 45000 },
-    { qt: 1, titulo: 'Branding em Camião - Taksim Wrap®', subtitulo: 'Volvo FH Serie 4', descricao: BR('Viatura Volvo FH Serie 4', 'já definido'), precoUnit: 42000 },
-    { qt: 10, titulo: 'Kit de Identificação - Taksim Wrap®', subtitulo: 'Universal', descricao: 'Kit de Identificação da Compania\nInclui: 3 Números do Camião, 1 Par Proibição á passageiros e 1 Par de Sticker de Contactos\ne Informações da compania.\n** Layout por definir', precoUnit: 2500 }
+    { qt: 1, titulo: 'Logotipo', subtitulo: 'Vectorização', descricao: 'Vectorização do Logotipo e Melhoria\n** Entregue em formato digital pronto para uso comum e produção', precoUnit: 8000 },
+    { qt: 3, titulo: 'Branding em Camião - Taksim Wrap®', subtitulo: 'Camião Modelo A', descricao: BR('Camião Modelo A', 'já definido'), precoUnit: 40000 },
+    { qt: 2, titulo: 'Branding em Camião - Taksim Wrap®', subtitulo: 'Camião Modelo B', descricao: BR('Viatura Camião Modelo B', 'já definido'), precoUnit: 38000 },
+    { qt: 8, titulo: 'Kit de Identificação - Taksim Wrap®', subtitulo: 'Universal', descricao: 'Kit de Identificação da Compania\nInclui: 3 Números do Camião, 1 Par Proibição á passageiros e 1 Par de Sticker de Contactos\ne Informações da compania.\n** Layout por definir', precoUnit: 2000 }
   ]
 } as Cotacao
 const cliente = { id: 'c', nome: 'Cliente Exemplo', cidade: 'Maputo, Moçambique' } as Cliente
 
-describe('cotação igual à do Momad', () => {
-  it('lays out the reference quote like his file (item boxes at 219.4 / 303.5 / 411.1 / 518.2)', () => {
+describe('cotação no modelo da empresa', () => {
+  it('lays out a quote like the template (item boxes at 219.4 / 303.5 / 411.1 / 518.2)', () => {
     const paginas = paginar(exemplo, medir)
     expect(paginas.length).toBe(1)
     const ys = paginas[0].map((i) => i.y)

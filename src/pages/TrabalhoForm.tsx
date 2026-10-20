@@ -164,7 +164,7 @@ export function TrabalhoForm({ t, onClose, preset }: { t?: Trabalho; onClose: ()
         </div>
 
         <Field label="Título (opcional)" full hint="Se deixar vazio, usa a primeira parte">
-          <input value={f.titulo} onChange={(e) => set({ titulo: e.target.value })} placeholder="Ex.: Branding camiões — Lote 1" />
+          <input value={f.titulo} onChange={(e) => set({ titulo: e.target.value })} placeholder="Ex.: Branding de camiões" />
         </Field>
         <Field label="Descrição / detalhes (opcional)" full>
           <textarea value={f.descricao} onChange={(e) => set({ descricao: e.target.value })} placeholder="Medidas, materiais, referências, cores, o que o cliente pediu…" style={{ minHeight: 64 }} />

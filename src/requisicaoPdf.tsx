@@ -15,7 +15,7 @@ export const linhasComMaterial = (r: Pick<Requisicao, 'linhas' | 'materialImpres
       : { ...l, impressao: nomeOficial(r.materialImpressao) || '', precoImpressao: r.materialImpressao ? r.precoImpressaoM2 : 0, laminacao: nomeOficial(r.materialLaminacao) || '', precoLaminacao: r.materialLaminacao ? r.precoLaminacaoM2 : 0 }
   )
 
-// Académica price list 2026, with the names of the price list (Momad, 16 Oct): per m², sem IVA.
+// Académica price list 2026, with the names of the price list (16 Oct): per m², sem IVA.
 // Laminations are lamination only and can go over any vinyl.
 export const PRECARIO_ACADEMICA_2026: MaterialFornecedor[] = [
   { nome: 'Impressão com material da Puzzle Stickers', tipo: 'impressao', precoM2: 800, unidade: 'm²', descricao: 'Só a impressão — o material é nosso' },
@@ -30,7 +30,7 @@ export const PRECARIO_ACADEMICA_2026: MaterialFornecedor[] = [
   { nome: 'Laminação transparente premium', tipo: 'laminacao', precoM2: 450, unidade: 'm²', descricao: 'Só a laminação — sobre qualquer vinil' }
 ]
 
-// His old Excel lists say "Taksim Wrap" and "Laminação (PREMIUM)": read them as the price-list names.
+// The company's old Excel lists say "Taksim Wrap" and "Laminação (PREMIUM)": read them as the price-list names.
 export function nomeOficial(nome?: string) {
   if (!nome) return nome
   if (/taksim|vinil de wrap|vynil de wrap/i.test(nome)) return 'Vinil de wrap'
@@ -39,7 +39,7 @@ export function nomeOficial(nome?: string) {
   return nome
 }
 
-// Momad: "vinil de wrap + laminação de wrap" ordered together is the "Bundle Wrap".
+// "vinil de wrap + laminação de wrap" ordered together is the "Bundle Wrap".
 export const nomeMaterial = (l: Pick<LinhaMaterial, 'impressao' | 'laminacao'>) =>
   /vinil de wrap/i.test(l.impressao || '') && /lamina[cç][aã]o de wrap/i.test(l.laminacao || '') ? 'Bundle Wrap' : [l.impressao, l.laminacao].filter(Boolean).join(' + ') || '—'
 export const precoM2 = (l: Pick<LinhaMaterial, 'precoImpressao' | 'precoLaminacao'>) => (l.precoImpressao || 0) + (l.precoLaminacao || 0)
@@ -76,7 +76,7 @@ export function PaginaRequisicao({ numero, data, nomeTrabalho, fornecedor, empre
       </div>
 
       <div className="rq-info">
-        {/* Momad: the supplier box is just the supplier's logo. */}
+        {/* The supplier box is just the supplier's logo. */}
         <div className="rq-para">
           {logoFornecedor(fornecedor) ? <img src={logoFornecedor(fornecedor)} alt={fornecedor?.nome} /> : <b>{fornecedor?.nome || '—'}</b>}
         </div>
@@ -127,7 +127,7 @@ export function PaginaRequisicao({ numero, data, nomeTrabalho, fornecedor, empre
   )
 }
 
-// Print styles of the document (A4, Gotham, the yellow of his brand).
+// Print styles of the document (A4, Gotham, the yellow of the company's brand).
 export const CSS_REQUISICAO = `
 .rq{width:210mm;min-height:297mm;box-sizing:border-box;padding:13mm 13mm 11mm;background:#fff;color:#141414;font-family:'Gotham PS',Arial,sans-serif;font-size:8.6pt;position:relative;display:flex;flex-direction:column;page-break-after:always}
 .rq:last-child{page-break-after:auto}

@@ -51,7 +51,7 @@ export default function Painel() {
       devedores.set(t.clienteId, x)
     }
 
-    // What needs attention, following his terms.
+    // What needs attention, following the company's terms.
     const alertas: { tipo: 'bad' | 'warn' | 'info'; t: string; s: string; to: string }[] = []
     if (fin) {
       for (const t of d.trabalhos.filter((x) => !x.cancelado && x.etapa === 'entregue')) {

@@ -53,7 +53,7 @@ export default function TrabalhoDetalhe({ id }: { id: string }) {
   const reqs = d.requisicoes.filter((x) => x.trabalhoId === t.id)
   const custos = d.custos.filter((x) => x.trabalhoId === t.id)
   const docs = d.documentos.filter((x) => x.trabalhoId === t.id || x.trabalhoIds?.includes(t.id))
-  // Paid but no fatura-recibo / recibo yet: a reminder until he passes the document.
+  // Paid but no fatura-recibo / recibo yet: a reminder until the document is issued.
   const porDocumentar = r2(semDocumento(d.pagamentos, t.id).reduce((s, p) => s + p.valor, 0))
   const faturaAberta = docs.find((x) => x.direcao === 'emitido' && x.tipo === 'fatura')
   const passarDocumento = () => setPassar(faturaAberta ? { recibo: faturaAberta.id } : {})
@@ -75,7 +75,7 @@ export default function TrabalhoDetalhe({ id }: { id: string }) {
     toast(nova.origem === 'catalogo' ? 'Serviço do catálogo adicionado' : nova.precoUnit > 0 ? 'Parte guardada · combinado de boca' : 'Parte guardada · por cotar')
   }
 
-  // One single quote with every part (verbal ones included), like his reference quote.
+  // One single quote with every part (verbal ones included), like the company's reference quote.
   async function fazerCotacao() {
     const c = novo<Cotacao>({
       numero: numeroDoMes('COT', d.cotacoes.map((x) => x.numero), hojeISO()),

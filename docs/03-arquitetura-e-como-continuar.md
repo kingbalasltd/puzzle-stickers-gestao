@@ -473,10 +473,10 @@ No repositório: **4 ficheiros e 30 testes, todos a passar**.
 
 | Ficheiro | Testes | O que cobre |
 |---|---|---|
-| `src/calc.test.ts` | 27 | Lista de impressão (totais iguais a uma folha Excel real, material por linha); trabalho (totais de uma cotação real, urgência de 45% antes do IVA, dívida, sinal, custo, lucro); IVA do mês (liquidado − dedutível, crédito); fases e agenda (dias úteis, fases por tipo, nomes antigos, "a receber", itens da agenda, atraso); numeração mensal; caixa; despesas fixas (vencimento, estados, janela do dia 25 ao dia 5) e resultado do mês; ciclo da Académica (totais de pró-formas reais, sequência de fases, encomendas); mapa de crédito (totais da folha do Momad); cotação (urgência por linha, desconto antes do IVA, total por opção, várias viaturas) |
-| `src/leitura.test.ts` | 1 | Leitura de números nos formatos "14 460,00", "1 150,00 MTn", "4,176.00", "68.000,00 MT" e "7,23" (`numeroPt`) |
-| `src/cotacaoPdf.render.test.tsx` | 1 | Paginação da cotação de referência: as caixas dos itens ficam a menos de 1,2 pt das posições do original (219,4 / 303,5 / 411,1 / 518,2). Mede o texto com `test/fixtures/gotham-advances.json`. Escreve `test/out/cotacao.html`, para imprimir no Chrome e comparar |
-| `src/requisicaoPdf.render.test.tsx` | 1 | Preço de cada linha com o seu material (8,58 m² de Bundle Wrap = 17.160 MT) e somas por material. Escreve `test/out/requisicao.html` |
+| `src/calc.test.ts` | 27 | Lista de impressão (totais ao metical de uma folha, material por linha); trabalho (totais de uma cotação, urgência de 45% antes do IVA, dívida, sinal, custo, lucro); IVA do mês (liquidado − dedutível, crédito); fases e agenda (dias úteis, fases por tipo, nomes antigos, "a receber", itens da agenda, atraso); numeração mensal; caixa; despesas fixas (vencimento, estados, janela do dia 25 ao dia 5) e resultado do mês; ciclo do fornecedor (totais de pró-formas, sequência de fases, encomendas); mapa de crédito (totais da folha); cotação (urgência por linha, desconto antes do IVA, total por opção, várias viaturas) |
+| `src/leitura.test.ts` | 1 | Leitura de números nos formatos "12 345,00", "1 234,00 MTn", "4,321.00", "56.000,00 MT" e "7,23" (`numeroPt`) |
+| `src/cotacaoPdf.render.test.tsx` | 1 | Paginação de uma cotação de exemplo: as caixas dos itens ficam a menos de 1,2 pt das posições do modelo (219,4 / 303,5 / 411,1 / 518,2). Mede o texto com `test/fixtures/gotham-advances.json`. Escreve `test/out/cotacao.html`, para imprimir no Chrome e comparar |
+| `src/requisicaoPdf.render.test.tsx` | 1 | Preço de cada linha com o seu material (7,92 m² de Bundle Wrap = 15.840 MT) e somas por material. Escreve `test/out/requisicao.html` |
 
 - Os testes que liam os PDFs e as folhas Excel reais (pró-formas, fatura, listas de impressão) usavam documentos reais e não estão no repositório.
 - Os HTML de `test/out/` apontam para `public/fonts/gotham-*.woff`. Sem as fontes, a comparação visual não vale.
@@ -602,7 +602,7 @@ $env:PUZZLE_SENHA = '<palavra-passe da empresa>'; npx vite-node admin/carregar.t
 - **Nomes antigos** traduzem-se na leitura, sem reescrever registos. Exemplos: `normalizarEtapa` em `calc.ts`; `nomeOficial` e `linhasComMaterial` em `requisicaoPdf.tsx`. O tipo `producao` é lido como `branding` (`tipoInfo`), e `correcoes()` em `seed.ts` também o converte no arranque.
 - **Faturas e recibos** nunca são emitidos nem numerados pela app; só se regista o número do livro. As cotações levam o aviso de que não servem de comprovativo fiscal.
 - **Documentos iguais aos originais:** só mexer na geometria de `cotacaoPdf.tsx` ou de `requisicaoPdf.tsx` com os testes de render a passar e uma comparação visual (`test/out/`, com as fontes Gotham presentes).
-- **Textos** em português; valores no formato `68.000,00 MT` (`mt` em `format.ts`).
+- **Textos** em português; valores no formato `56.000,00 MT` (`mt` em `format.ts`).
 - **Dados reais** nunca no código: vão para a nuvem com `admin/carregar.ts`.
 - **Antes de cada publicação:** `npm test` e `npm run build`. Depois, confirmar a versão num aparelho.
 
@@ -669,7 +669,7 @@ O plano tem 12 decisões para o Momad tomar antes. Entre elas: o número da cota
 - `renderizarPdf` (`src/pdfPartilha.tsx`) desenha o documento com html2canvas. O html2canvas corta um SVG que só tem `viewBox`, sem `width`/`height`.
 - `public/img/logo.svg` é assim, e usa `currentColor` para acompanhar o tema. Por isso `PaginaRequisicao` usa `public/img/logo-doc.svg`, que tem tamanho e cor fixos.
 - **Regra:** qualquer SVG num documento que passe pelo html2canvas precisa de `width`, `height` e cores fixas.
-- A cotação (SVG com texto em Gotham) continua a sair pelo diálogo de impressão (`imprimirCotacao`). Passá-la para PDF real exige outro caminho: segundo as notas do projeto, o html2canvas não aplica as fontes web dentro de um SVG.
+- A cotação (SVG com texto em Gotham) continua a sair pelo diálogo de impressão (`imprimirCotacao`). Passá-la para PDF real exige outro caminho, porque o html2canvas não aplica as fontes web dentro de um SVG.
 
 ### 4. URL de blob e `StrictMode`
 
@@ -740,7 +740,7 @@ Passos, por esta ordem:
 | Cópia de segurança incompleta | `exportar()` em `Definicoes.tsx` | Exporta 11 tabelas e deixa de fora `despesasFixas`, `despesas`, `relatorios`, `tarefas`, `registos` e `ficheiros`. Usar `TABELAS` de `nuvem.ts` |
 | Histórico invisível | `registar()` em `db.ts` | Grava ações em `registos` (que sincroniza), mas nenhum ecrã lê essa tabela. O separador "Notas e histórico" mostra notas, passagens de fase e pagamentos |
 | Textos do protótipo | `Page` em `App.tsx` ("guardado no aparelho" e a dica "Neste protótipo…"); cartão Dados em `Definicoes.tsx` | São de antes da nuvem. Atualizar |
-| Cotação e IVA por impressão | `imprimirCotacao` e `imprimirIva` em `print.tsx` | Só a requisição sai como PDF real com Partilhar. O Momad pediu "sempre em PDF" |
-| Licença da Gotham | `public/fonts/gotham-*.woff` | Os ficheiros já não estão no repositório, mas o site publicado serve-os em `/fonts/`. Confirmar que a licença da empresa cobre a publicação web |
+| Cotação e IVA por impressão | `imprimirCotacao` e `imprimirIva` em `print.tsx` | Só a requisição sai como PDF real com Partilhar. A cotação também deve sair como ficheiro PDF |
+| Fonte Gotham | `public/fonts/gotham-*.woff` | Os ficheiros não estão no repositório. Quem continuar o projeto copia-os da empresa para `public/fonts/` |
 | Catálogos sem internet | `globPatterns` em `vite.config.ts` | Os PDFs e as capas de `catalogos/` não ficam em cache, por isso não abrem sem rede |
 | Imagens sem uso | `public/img/cot-pattern.jpg`, `public/img/mark.png` | O código não as usa, mas entram na pré-cache (cerca de 118 KB) |

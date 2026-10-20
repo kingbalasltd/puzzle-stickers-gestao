@@ -68,7 +68,7 @@ export function ClienteForm({ c, onClose }: { c?: Cliente; onClose: (id?: string
   const toast = useToast()
   const [f, setF] = useState<Partial<Cliente>>(c ? { ...c } : { nome: '' })
   const set = (p: Partial<Cliente>) => setF((x) => ({ ...x, ...p }))
-  // Quotes print "Cidade, País" under the client (Momad, 18 Oct): two fields, saved together.
+  // Quotes print "Cidade, País" under the client: two fields, saved together.
   const [mor, setMor] = useState(() => { const m = separarMorada(c?.cidade); return { cidade: m.cidade, pais: m.pais || 'Moçambique' } })
   async function salvar() {
     if (!f.nome?.trim()) return toast('Escreva o nome')

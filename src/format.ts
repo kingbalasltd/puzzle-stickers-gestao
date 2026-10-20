@@ -1,7 +1,7 @@
 const nf2 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const nf0 = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 })
 
-// "Pemba – Cabo Delgado, Moçambique" ↔ cidade + país (the last comma splits them).
+// "Beira – Sofala, Moçambique" ↔ cidade + país (the last comma splits them).
 export const separarMorada = (m?: string) => {
   const s = (m || '').trim()
   const i = s.lastIndexOf(',')
@@ -9,7 +9,7 @@ export const separarMorada = (m?: string) => {
 }
 export const juntarMorada = (cidade: string, pais: string) => [cidade.trim(), pais.trim()].filter(Boolean).join(', ')
 
-// His documents write 68.000,00 MT (dot thousands, comma decimals).
+// The company's documents write 56.000,00 MT (dot thousands, comma decimals).
 export const mt = (n: number) => `${nf2.format(n || 0)} MT`
 export const mtCurto = (n: number) => {
   const a = Math.abs(n)

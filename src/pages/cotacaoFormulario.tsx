@@ -7,7 +7,7 @@ import { DESLOCACAO, frasePartes, IMPRESSO, MATERIAIS_COTACAO, NOTAS_ITEM, TEXTO
 import { Field, Icon } from '../ui'
 import { ClienteForm, LogoCliente } from './Clientes'
 
-// The quote form (17–18 Oct, Momad): one line per service or product, materials in red, options
+// The quote form (17–18 Oct): one line per service or product, materials in red, options
 // the client chooses from, headings, deslocação / urgency / discount, beside a live A4.
 
 const itemNovo = (): ItemCotacao => ({ qt: 1, titulo: '', subtitulo: '', descricao: '', precoUnit: 0, materiais: [] })
@@ -59,7 +59,7 @@ function ItemEditor({ it, n, opcoes, lista, onChange, onRemove, onFechar }: {
     return (
       <div className="card pad it-secao">
         <div className="it-cab"><span className="badge">Secção</span><button className="btn sm icon ghost right" aria-label="Apagar" onClick={onRemove}><Icon n="lixo" /></button></div>
-        <input className="inp" value={it.titulo} placeholder="PROJECTO GESTÃO MENSAL" onChange={(e) => onChange({ titulo: e.target.value })} />
+        <input className="inp" value={it.titulo} placeholder="SERVIÇOS MENSAIS" onChange={(e) => onChange({ titulo: e.target.value })} />
       </div>
     )
   }
@@ -79,7 +79,7 @@ function ItemEditor({ it, n, opcoes, lista, onChange, onRemove, onFechar }: {
       </div>
       <div className="form-grid">
         <Field label="Linha 1" full><input value={it.titulo} placeholder="Full Wrap - Taksim®" onChange={(e) => onChange({ titulo: e.target.value })} /></Field>
-        <Field label="Linha 2 (a negrito)" full><input value={it.subtitulo || ''} placeholder="BMW E92" onChange={(e) => onChange({ subtitulo: e.target.value })} /></Field>
+        <Field label="Linha 2 (a negrito)" full><input value={it.subtitulo || ''} placeholder="Toyota Corolla" onChange={(e) => onChange({ subtitulo: e.target.value })} /></Field>
         <Field label="Detalhes (em itálico, uma ideia por linha)" full><textarea value={it.descricao || ''} onChange={(e) => onChange({ descricao: e.target.value })} style={{ minHeight: 96 }} /></Field>
         <Field label="Materiais (saem a vermelho)" full><Materiais lista={lista} valor={it.materiais || []} onChange={(materiais) => onChange({ materiais })} /></Field>
         <Field label="Nota final" full>
@@ -93,8 +93,8 @@ function ItemEditor({ it, n, opcoes, lista, onChange, onRemove, onFechar }: {
   )
 }
 
-// Printed work in one go: he picks the service, style and vehicle, ticks the materials he offers
-// and gives each a price; the form writes one item per option with his usual text.
+// Printed work in one go: the user picks the service, style and vehicle, ticks the materials on offer
+// and gives each a price; the form writes one item per option with the company's usual text.
 function NovoImpresso({ lista, onCriar, onCancelar, onRascunho }: { lista: MaterialCotacao[]; onCriar: (itens: ItemCotacao[]) => void; onCancelar: () => void; onRascunho?: (itens: ItemCotacao[] | null) => void }) {
   const [tipo, setTipo] = useState(0)
   const [estilos, setEstilos] = useState<string[]>(['Artístico', 'Desportivo'])
@@ -105,7 +105,7 @@ function NovoImpresso({ lista, onCriar, onCancelar, onRascunho }: { lista: Mater
   const [partes, setPartes] = useState<string[]>(IMPRESSO.tipos[0].partes)
   const [outra, setOutra] = useState('')
   const [nota, setNota] = useState(NOTAS_ITEM[0])
-  const [linha, setLinha] = useState<string | null>(null) // first description line; null = written for him
+  const [linha, setLinha] = useState<string | null>(null) // first description line; null = written by the form
   const marcas = lista.filter((m) => m.marca)
   const [ops, setOps] = useState(marcas.map((m, i) => ({ m, ok: i < 3, preco: '' })))
   const t = IMPRESSO.tipos[tipo]
@@ -140,9 +140,9 @@ function NovoImpresso({ lista, onCriar, onCancelar, onRascunho }: { lista: Mater
       <div className="form-grid">
         <Field label="Serviço" full><div className="chips">{IMPRESSO.tipos.map((x, i) => <button key={x.nome} className={`chip ${tipo === i ? 'on' : ''}`} onClick={() => escolher(i)}>{x.nome}</button>)}</div></Field>
         <Field label="Estilo" full><div className="chips">{IMPRESSO.estilos.map((e) => <button key={e} className={`chip ${estilos.includes(e) ? 'on' : ''}`} onClick={() => setEstilos((es) => (es.includes(e) ? es.filter((x) => x !== e) : [...es, e]))}>{e}</button>)}</div></Field>
-        <Field label={viatura ? 'Viatura' : 'Onde (ex.: Congelador 0,80M x 3m)'} full>
+        <Field label={viatura ? 'Viatura' : 'Onde (ex.: Expositor 1,20M x 2M)'} full>
           <div className="row" style={{ gap: 8 }}>
-            <input className="inp" style={{ flex: 1 }} autoFocus value={objeto} placeholder={viatura ? 'Nissan Silvia S15' : 'Congelador (0,80M x 3m)'} onChange={(e) => setObjeto(e.target.value)} />
+            <input className="inp" style={{ flex: 1 }} autoFocus value={objeto} placeholder={viatura ? 'Toyota Corolla' : 'Expositor (1,20M x 2M)'} onChange={(e) => setObjeto(e.target.value)} />
             <label className="qt-in"><span>Qt.</span><input className="inp" inputMode="numeric" value={qt} onChange={(e) => setQt(e.target.value.replace(/\D/g, ''))} /></label>
           </div>
           <label className="check"><input type="checkbox" checked={viatura} onChange={(e) => setViatura(e.target.checked)} /> É uma viatura</label>
@@ -185,7 +185,7 @@ function NovoImpresso({ lista, onCriar, onCancelar, onRascunho }: { lista: Mater
   )
 }
 
-// Criação de imagem: his catálogo, one tap adds the service as a line (logotipo, identidade…).
+// Criação de imagem: the company's catálogo, one tap adds the service as a line (logotipo, identidade…).
 function CatalogoCriacao({ servicos, onEscolher, onCancelar }: { servicos: Servico[]; onEscolher: (s: Servico) => void; onCancelar: () => void }) {
   const ativos = servicos.filter((s) => s.ativo)
   return (
@@ -247,8 +247,8 @@ const DESL = 'Deslocação'
 // Deslocação and other charges always sit at the end of the quote.
 const ordenar = (xs: ItemCotacao[]) => [...xs.filter((x) => !x.extra), ...xs.filter((x) => x.extra)]
 
-// Momad (18 Oct): every line is a service or product; he adds lines as he needs them. Deslocação,
-// urgency and discount sit at the bottom, by the totals, which follow everything he types.
+// Every line is a service or product (18 Oct); lines are added as needed. Deslocação,
+// urgency and discount sit at the bottom, by the totals, which follow everything typed.
 export function EditorCotacao({ c, set, clientes, servicos, empresa, materiais = MATERIAIS_COTACAO, abertoInicial = 0, onRascunho }: {
   c: Cotacao; set: (p: Partial<Cotacao>) => void; clientes: Cliente[]; servicos: Servico[]; empresa: Empresa; materiais?: MaterialCotacao[]; abertoInicial?: number
   onRascunho?: (itens: ItemCotacao[] | null) => void // what is being filled in, not yet in the quote
@@ -322,7 +322,7 @@ export function EditorCotacao({ c, set, clientes, servicos, empresa, materiais =
             <button onClick={() => setPainel('impresso')}><Icon n="imprimir" /><b>Wrap / Branding</b><span>Full Wrap, Half Wrap ou Branding impresso</span></button>
             <button onClick={() => setPainel('criacao')}><Icon n="catalogo" /><b>Criação de imagem</b><span>Logotipo, identidade visual, editorial…</span></button>
             <button onClick={() => juntarLinha(itemNovo())}><Icon n="editar" /><b>Outro serviço ou produto</b><span>Escreves o texto e o preço</span></button>
-            <button onClick={() => juntarLinha({ ...itemNovo(), secao: true })}><Icon n="lista" /><b>Título de secção</b><span>Ex.: PROJECTO GESTÃO MENSAL</span></button>
+            <button onClick={() => juntarLinha({ ...itemNovo(), secao: true })}><Icon n="lista" /><b>Título de secção</b><span>Ex.: SERVIÇOS MENSAIS</span></button>
           </div>
         </div>
       )}
@@ -396,7 +396,7 @@ export function EditorCotacao({ c, set, clientes, servicos, empresa, materiais =
   )
 }
 
-// The quote as it will come out, page by page, updating while he types.
+// The quote as it will come out, page by page, updating while the user types.
 export function PreviewCotacao({ c, cliente, empresa }: { c: Cotacao; cliente?: Cliente; empresa: Empresa }) {
   const [pronto, setPronto] = useState(false)
   const [logo, setLogo] = useState<string>()

@@ -1,4 +1,4 @@
-// Loads a batch of Momad's real data straight into the cloud with the app's own code,
+// Loads a batch of the company's real data straight into the cloud with the app's own code,
 // so real records never go into the public site. Runs like one more device:
 // signs in, pulls everything into an in-memory database, runs the data script,
 // pushes the changes and signs out.
@@ -13,7 +13,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const PUBLICO = fileURLToPath(new URL('../public/', import.meta.url))
 const fetchOriginal = globalThis.fetch
-// The seed fetches /seed/... files; serve them from public/ like the dev server would.
+// Data scripts may fetch /... paths; serve them from public/ like the dev server would.
 globalThis.fetch = (async (u: any, init?: any) => {
   const url = typeof u === 'string' ? u : u.url
   if (url.startsWith('/')) {

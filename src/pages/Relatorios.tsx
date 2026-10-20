@@ -7,7 +7,7 @@ import { ir, useDados, useSessao } from '../state'
 import { Avatar, Empty, Field, Icon, Thumb, UploadZone, useToast } from '../ui'
 
 // Daily report: each worker writes what they did, what's next and any problem,
-// linked to jobs and with photos. Momad sees everyone and who hasn't sent.
+// linked to jobs and with photos. The owner sees everyone and who hasn't sent.
 export default function Relatorios() {
   const d = useDados()
   const { user, pode } = useSessao()
@@ -116,7 +116,7 @@ function RelatorioForm({ r, onDone }: { r?: Relatorio; onDone: () => void }) {
   }
   return (
     <div className="col" style={{ gap: 12 }}>
-      <Field label="O que fiz hoje"><textarea value={f.feito} onChange={(e) => setF({ ...f, feito: e.target.value })} placeholder="Ex.: Apliquei as laterais do Volvo FH, cortei os autocolantes de um cliente…" /></Field>
+      <Field label="O que fiz hoje"><textarea value={f.feito} onChange={(e) => setF({ ...f, feito: e.target.value })} placeholder="Ex.: Apliquei as laterais de um camião, cortei os autocolantes de um cliente…" /></Field>
       {meus.length > 0 && (
         <div className="field">
           <span>Em que trabalhos</span>

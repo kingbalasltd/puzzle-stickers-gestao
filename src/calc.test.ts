@@ -30,26 +30,26 @@ import type { Documento, Trabalho } from './db'
 const cfg = { taxaIva: 16, urgenciaPct: 45, sinalPct: 50 }
 
 describe('lista de impressão', () => {
-  it('reproduces a real print-list sheet (Cliente A) to the metical', () => {
+  it('reproduces a print-list sheet to the metical', () => {
     const t = totaisRequisicao(
       {
         precoImpressaoM2: 1150,
         precoLaminacaoM2: 850,
         comIva: true,
         linhas: [
-          { qt: 1, ficheiro: 'P1', largura: 1.3, comprimento: 2.35 },
-          { qt: 1, ficheiro: 'P2', largura: 1.3, comprimento: 2.35 },
+          { qt: 1, ficheiro: 'P1', largura: 1.3, comprimento: 2.4 },
+          { qt: 1, ficheiro: 'P2', largura: 1.3, comprimento: 2.4 },
           { qt: 1, ficheiro: 'P3', largura: 1.2, comprimento: 1.5 },
-          { qt: 1, ficheiro: 'P4', largura: 1.25, comprimento: 1.85 }
+          { qt: 1, ficheiro: 'P4', largura: 1.25, comprimento: 2 }
         ]
       },
       16
     )
-    expect(t.m2.toFixed(2)).toBe('10.22')
+    expect(t.m2.toFixed(2)).toBe('10.54')
     expect(t.precoM2).toBe(2000)
-    expect(t.subtotal).toBe(20445)
-    expect(t.iva).toBe(3271.2)
-    expect(t.total).toBe(23716.2)
+    expect(t.subtotal).toBe(21080)
+    expect(t.iva).toBe(3372.8)
+    expect(t.total).toBe(24452.8)
   })
 
   it('prices each print with its own material (bundle, ContraVision only, banner)', () => {
@@ -76,15 +76,15 @@ describe('lista de impressão', () => {
 })
 
 describe('trabalho', () => {
-  it('matches a real quote totals (Cliente B)', () => {
+  it('totals a quote with IVA', () => {
     const t = totaisTrabalho(
-      { comIva: true, urgente: false, itens: [{ descricao: 'S14.5', qt: 1, precoUnit: 68000 }, { descricao: 'R33', qt: 1, precoUnit: 65000 }] },
+      { comIva: true, urgente: false, itens: [{ descricao: 'Viatura 1', qt: 1, precoUnit: 60000 }, { descricao: 'Viatura 2', qt: 1, precoUnit: 50000 }] },
       16,
       45
     )
-    expect(t.subtotal).toBe(133000)
-    expect(t.iva).toBe(21280)
-    expect(t.total).toBe(154280)
+    expect(t.subtotal).toBe(110000)
+    expect(t.iva).toBe(17600)
+    expect(t.total).toBe(127600)
   })
 
   it('adds the 45% taxa de urgência before IVA', () => {
@@ -122,16 +122,16 @@ describe('IVA mensal', () => {
   const d = (x: Partial<Documento>) => ({ deleted: false, base: 0, iva: 0, total: 0, ...x }) as Documento
   it('liquidado − dedutível, ignoring recibos and other months', () => {
     const docs = [
-      d({ direcao: 'emitido', tipo: 'fatura', data: '2026-10-03', base: 133000, iva: 21280 }),
-      d({ direcao: 'emitido', tipo: 'recibo', data: '2026-10-04', base: 0, iva: 21280 }),
-      d({ direcao: 'recebido', tipo: 'fatura', data: '2026-10-12', base: 20445, iva: 3271.2 }),
+      d({ direcao: 'emitido', tipo: 'fatura', data: '2026-10-03', base: 110000, iva: 17600 }),
+      d({ direcao: 'emitido', tipo: 'recibo', data: '2026-10-04', base: 0, iva: 17600 }),
+      d({ direcao: 'recebido', tipo: 'fatura', data: '2026-10-12', base: 21080, iva: 3372.8 }),
       d({ direcao: 'emitido', tipo: 'nota-credito', data: '2026-10-20', base: 1000, iva: 160 }),
       d({ direcao: 'emitido', tipo: 'fatura', data: '2026-09-30', base: 50000, iva: 8000 })
     ]
     const m = ivaDoMes(docs, '2026-10')
-    expect(m.liquidado).toBe(21120)
-    expect(m.dedutivel).toBe(3271.2)
-    expect(m.apagar).toBe(17848.8)
+    expect(m.liquidado).toBe(17440)
+    expect(m.dedutivel).toBe(3372.8)
+    expect(m.apagar).toBe(14067.2)
     expect(m.credito).toBe(0)
     expect(m.ignorados.length).toBe(1)
   })
@@ -147,7 +147,7 @@ describe('agenda', () => {
     expect(addDiasUteis('2026-10-16', 1)).toBe('2026-10-19') // Fri → Mon
     expect(addDiasUteis('2026-10-14', 5)).toBe('2026-10-21')
   })
-  it("follows Momad's phases, each kind skipping what it does not need", () => {
+  it("follows the job phases, each kind skipping what it does not need", () => {
     expect(proximaEtapa({ tipo: 'branding', etapa: 'negociacao' })).toBe('layout')
     expect(proximaEtapa({ tipo: 'branding', etapa: 'producao' })).toBe('montagem')
     expect(proximaEtapa({ tipo: 'criacao', etapa: 'layout' })).toBe('entrega')
@@ -161,11 +161,11 @@ describe('agenda', () => {
       .toEqual(['pedido', 'negociacao', 'negociacao', 'layout', 'montagem', 'entrega', 'entregue', 'producao'])
   })
   it('only counts confirmed or delivered work in "a receber"', () => {
-    const r = { total: 55680, emDivida: 55680, pago: 0 }
+    const r = { total: 50000, emDivida: 50000, pago: 0 }
     expect(contaParaReceber({ etapa: 'negociacao' }, r)).toBe(false)
     expect(contaParaReceber({ etapa: 'negociacao', confirmadoEm: '2026-10-15' }, r)).toBe(true)
     expect(contaParaReceber({ etapa: 'producao' }, r)).toBe(true)
-    expect(contaParaReceber({ etapa: 'pedido' }, { ...r, pago: 10000, emDivida: 45680 })).toBe(true) // paid something = confirmed
+    expect(contaParaReceber({ etapa: 'pedido' }, { ...r, pago: 10000, emDivida: 40000 })).toBe(true) // paid something = confirmed
     expect(contaParaReceber({ etapa: 'entregue', cancelado: true }, r)).toBe(false)
   })
   it('puts tasks and phase dates in the agenda', () => {
@@ -187,23 +187,23 @@ describe('agenda', () => {
     expect(sec('k1')).toBe('semData')
     expect(sec('c:pedido')).toBe('semData')
   })
-  it("numbers quotes and orders Momad's way, restarting every month", () => {
+  it("numbers quotes and orders per month, restarting every month", () => {
     expect(numeroDoMes('REQ', [], '2026-10-16')).toBe('REQ-001-OUT/26')
     expect(numeroDoMes('COT', ['COT-001-OUT/26', 'COT-002-OUT/26', 'COT-007-SET/26', 'REQ-009-OUT/26'], '2026-10-20')).toBe('COT-003-OUT/26')
     expect(numeroDoMes('COT', ['COT-003-OUT/26'], '2026-11-02')).toBe('COT-001-NOV/26')
     expect(numeroDoMes('REQ', ['REQ-2026-013'], '2027-01-05')).toBe('REQ-001-JAN/27')
   })
-  it('keeps the caixa: his balance, then clients in and purchases / fixed / suppliers out', () => {
+  it('keeps the caixa: opening balance, then clients in and purchases / fixed / suppliers out', () => {
     const movs = movimentosCaixa(
       [{ id: 'p', trabalhoId: 'j', data: '2026-10-20', valor: 50000, createdAt: '2026-10-20T10:00:00Z' } as any, { id: 'p0', trabalhoId: 'j', data: '2026-10-01', valor: 9999, createdAt: '2026-10-01T10:00:00Z' } as any],
-      [{ id: 'c', data: '2026-10-18', descricao: 'Limpeza', categoria: 'Outros', valor: 1160, iva: 160, createdAt: '2026-10-18T09:00:00Z' } as any, { id: 'f', fixaId: 'x', mes: '2026-10', data: '2026-11-02', descricao: 'Salário', categoria: 'Salários', valor: 8700, iva: 0, createdAt: '2026-11-02T09:00:00Z' } as any],
+      [{ id: 'c', data: '2026-10-18', descricao: 'Limpeza', categoria: 'Outros', valor: 1160, iva: 160, createdAt: '2026-10-18T09:00:00Z' } as any, { id: 'f', fixaId: 'x', mes: '2026-10', data: '2026-11-02', descricao: 'Salário', categoria: 'Salários', valor: 9000, iva: 0, createdAt: '2026-11-02T09:00:00Z' } as any],
       [{ id: 'r', numero: 'REQ-001-OUT/26', nomeTrabalho: 'Lista', pagamentos: [{ id: 'x', data: '2026-10-21', valor: 10000, metodo: 'Transferência' }] } as any]
     )
-    // he said he had 100.000 on 16 Oct: the 1 Oct payment is already inside that number
-    expect(saldoCaixa(movs, { valor: 100000, data: '2026-10-16', em: '2026-10-16T12:00:00Z' })).toBe(100000 + 50000 - 1160 - 8700 - 10000)
+    // opening balance of 100.000 set on 16 Oct: the 1 Oct payment is already inside it
+    expect(saldoCaixa(movs, { valor: 100000, data: '2026-10-16', em: '2026-10-16T12:00:00Z' })).toBe(100000 + 50000 - 1160 - 9000 - 10000)
     const out = resumoCaixaMes(movs, '2026-10')
     expect([out.entrou, out.compras, out.fixas, out.fornecedores, out.saiu]).toEqual([59999, 1160, 0, 10000, 11160])
-    expect(resumoCaixaMes(movs, '2026-11').fixas).toBe(8700) // cash leaves the day it is paid
+    expect(resumoCaixaMes(movs, '2026-11').fixas).toBe(9000) // cash leaves the day it is paid
   })
   it('a job is late when its current phase deadline passed', () => {
     expect(prazoAtual({ etapa: 'layout', prazo: '', prazos: { layout: '2026-10-10' } })).toBe('2026-10-10')
@@ -225,7 +225,7 @@ describe('despesas', () => {
     const r = fixasDoMes(fs, ds, '2026-10', '2026-10-14')
     expect(r.map((x) => `${x.fixa.id}:${x.estado}`)).toEqual(['a:paga', 'b:atrasada', 'c:pendente'])
   })
-  it("pays Momad's fixed expenses from the 25th to the 5th of the next month", () => {
+  it("pays fixed expenses from the 25th to the 5th of the next month", () => {
     const f = { ...fixa({ id: 'sal', dia: 5, inicio: '2026-10' }), abre: 25 }
     expect(janelaFixa(f, '2026-10')).toEqual({ abre: '2026-10-25', vencimento: '2026-11-05' })
     expect(janelaFixa(f, '2026-12')).toEqual({ abre: '2026-12-25', vencimento: '2027-01-05' })
@@ -236,8 +236,8 @@ describe('despesas', () => {
     expect(estado('2026-11-06')).toBe('atrasada')
     expect(estado('2026-11-06', [{ id: 'p', fixaId: 'sal', mes: '2026-10', data: '2026-11-02', valor: 1000, iva: 0 }])).toBe('paga')
     // October's salary paid on 2 Nov is an October cost.
-    const r = resultadoDoMes('2026-10', [], [], [], [{ data: '2026-11-02', mes: '2026-10', categoria: 'Salários', valor: 8700, iva: 0 } as any], 16)
-    expect(r.despesas).toBe(8700)
+    const r = resultadoDoMes('2026-10', [], [], [], [{ data: '2026-11-02', mes: '2026-10', categoria: 'Salários', valor: 9000, iva: 0 } as any], 16)
+    expect(r.despesas).toBe(9000)
   })
   it('monthly result = vendas − custos dos trabalhos − despesas (sem IVA)', () => {
     const r = resultadoDoMes(
@@ -260,33 +260,33 @@ describe('despesas', () => {
   })
 })
 
-describe('ciclo Académica (documentos reais)', () => {
+describe('ciclo do fornecedor (requisições)', () => {
   const wrap = (linhas: [number, number, number][]) => ({
     precoImpressaoM2: 1150, precoLaminacaoM2: 850, comIva: true,
     linhas: linhas.map(([qt, largura, comprimento], i) => ({ qt, ficheiro: `P${i + 1}`, largura, comprimento }))
   })
-  it('matches four real Académica pró-formas and a client sheet', () => {
-    const pf1 = totaisRequisicao(wrap([[1, 1.2, 2.7], [1, 1.2, 2.2], [1, 1.2, 2], [1, 1.2, 2], [1, 1.2, 1.5], [0, 1.2, 1.5], [0, 1.2, 1.5]]), 16)
-    expect(pf1.m2.toFixed(2)).toBe('12.48')
-    expect(pf1.total).toBe(28953.6)
-    const pf2 = totaisRequisicao(wrap([[1, 1.25, 2.1], [1, 1.25, 2.1], [1, 1.1, 1.8]]), 16)
-    expect(pf2.subtotal).toBe(14460)
-    expect(pf2.total).toBe(16773.6)
-    const pf4 = totaisRequisicao(wrap([[1, 1.2, 1.35], [1, 0.8, 1.5]]), 16)
-    expect(pf4.total).toBe(6542.4)
-    const folha = totaisRequisicao(wrap([[1, 1.55, 1.9], [1, 1.28, 1.45], [1, 1.55, 2.1]]), 16)
-    expect(folha.subtotal).toBe(16112)
-    expect(folha.total).toBe(18689.92)
+  it('totals four pró-formas and a print sheet', () => {
+    const pf1 = totaisRequisicao(wrap([[1, 1.2, 2.5], [1, 1.2, 2], [1, 1.2, 1.8], [1, 1.2, 1.8], [1, 1.2, 1.5], [0, 1.2, 1.5]]), 16)
+    expect(pf1.m2.toFixed(2)).toBe('11.52')
+    expect(pf1.total).toBe(26726.4)
+    const pf2 = totaisRequisicao(wrap([[1, 1.25, 2], [1, 1.25, 2], [1, 1.1, 1.6]]), 16)
+    expect(pf2.subtotal).toBe(13520)
+    expect(pf2.total).toBe(15683.2)
+    const pf4 = totaisRequisicao(wrap([[1, 1.2, 1.25], [1, 0.8, 1.5]]), 16)
+    expect(pf4.total).toBe(6264)
+    const folha = totaisRequisicao(wrap([[1, 1.5, 1.9], [1, 1.3, 1.4], [1, 1.5, 2]]), 16)
+    expect(folha.subtotal).toBe(15340)
+    expect(folha.total).toBe(17794.4)
   })
   it('follows list → pró-forma → crédito → paga → fatura → levantada', () => {
-    const r: any = { linhas: [], estado: 'rascunho', comIva: true, precoImpressaoM2: 0, precoLaminacaoM2: 0, data: '2026-09-28' }
+    const r: any = { linhas: [], estado: 'rascunho', comIva: true, precoImpressaoM2: 0, precoLaminacaoM2: 0, data: '2026-01-12' }
     expect(faseRequisicao(r)).toBe('rascunho')
-    r.enviadaEm = '2026-09-28'
+    r.enviadaEm = '2026-01-12'
     expect(faseRequisicao(r)).toBe('enviada')
-    r.proforma = { numero: '8959/2026', data: '2026-10-01', valor: 16773.6 }
+    r.proforma = { numero: 'PF-0102/2026', data: '2026-01-14', valor: 15683.2 }
     expect(faseRequisicao(r)).toBe('proforma')
-    expect(contasAPagar([r], 16)[0].valor).toBe(16773.6)
-    r.pagamento = 'credito'; r.creditoDesde = '2026-10-01'; r.levantadaEm = '2026-10-03'
+    expect(contasAPagar([r], 16)[0].valor).toBe(15683.2)
+    r.pagamento = 'credito'; r.creditoDesde = '2026-01-14'; r.levantadaEm = '2026-01-16'
     expect(faseRequisicao(r)).toBe('credito')
     expect(contasAPagar([r], 16)[0].credito).toBe(true)
     r.pagamento = 'pago'; r.faturaDocId = 'f'
@@ -300,49 +300,49 @@ describe('ciclo Académica (documentos reais)', () => {
 })
 
 import { mapaCredito, estadoPagamento } from './calc'
-describe('mapa de crédito Académica (Excel do Momad)', () => {
+describe('mapa de crédito do fornecedor', () => {
   const r = (x: any) => ({ linhas: [], precoImpressaoM2: 0, precoLaminacaoM2: 0, comIva: true, estado: 'enviada', numero: x.n, data: x.d, ...x }) as any
   const reqs = [
-    r({ n: 'A', d: '2026-09-15', proforma: { numero: 'Várias', data: '2026-09-15', valor: 37437.7 }, pagamento: 'credito', pagamentos: [{ id: 'p', data: '2026-09-15', valor: 18718.8, metodo: 'Transferência' }], levantadaEm: '2026-09-15' }),
-    r({ n: 'B', d: '2026-09-28', proforma: { numero: '8960/2026', data: '2026-10-01', valor: 6542.4 }, pagamento: 'credito' }),
-    r({ n: 'C', d: '2026-09-28', proforma: { numero: '8957/2026', data: '2026-10-01', valor: 28953.6 }, pagamento: 'credito' }),
-    r({ n: 'D', d: '2026-09-28', proforma: { numero: '8959/2026', data: '2026-10-01', valor: 16773.6 }, pagamento: 'credito' }),
-    r({ n: 'E', d: '2026-09-28', proforma: { numero: '8958/2026', data: '2026-10-01', valor: 16773.6 }, pagamento: 'credito' }),
-    r({ n: 'F', d: '2026-10-06', tipo: 'encomenda', itens: [{ descricao: 'Traseira', unidade: 'un', qt: 1, precoUnit: 4800 }], pagamento: 'credito' }),
-    r({ n: 'G', d: '2026-10-13', tipo: 'encomenda', itens: [{ descricao: 'Acabamentos', unidade: 'un', qt: 1, precoUnit: 2160 }], proforma: { numero: '9034/2026', data: '2026-10-13', valor: 2505.6 }, pagamento: 'credito' })
+    r({ n: 'A', d: '2026-01-05', proforma: { numero: 'Várias', data: '2026-01-05', valor: 30000 }, pagamento: 'credito', pagamentos: [{ id: 'p', data: '2026-01-07', valor: 12000, metodo: 'Transferência' }], levantadaEm: '2026-01-06' }),
+    r({ n: 'B', d: '2026-01-12', proforma: { numero: 'PF-0104/2026', data: '2026-01-14', valor: 6264 }, pagamento: 'credito' }),
+    r({ n: 'C', d: '2026-01-12', proforma: { numero: 'PF-0101/2026', data: '2026-01-14', valor: 26726.4 }, pagamento: 'credito' }),
+    r({ n: 'D', d: '2026-01-12', proforma: { numero: 'PF-0102/2026', data: '2026-01-14', valor: 15683.2 }, pagamento: 'credito' }),
+    r({ n: 'E', d: '2026-01-12', proforma: { numero: 'PF-0103/2026', data: '2026-01-14', valor: 14500 }, pagamento: 'credito' }),
+    r({ n: 'F', d: '2026-01-16', tipo: 'encomenda', itens: [{ descricao: 'Item extra A', unidade: 'un', qt: 1, precoUnit: 4000 }], pagamento: 'credito' }),
+    r({ n: 'G', d: '2026-01-20', tipo: 'encomenda', itens: [{ descricao: 'Item extra B', unidade: 'un', qt: 1, precoUnit: 2000 }], proforma: { numero: 'PF-0105/2026', data: '2026-01-20', valor: 2320 }, pagamento: 'credito' })
   ]
-  it('reproduces his totals', () => {
+  it('reproduces the spreadsheet totals', () => {
     const m = mapaCredito(reqs, 16)
-    expect(m.total).toBe(114554.5)
-    expect(m.pago).toBe(18718.8)
-    expect(m.aberto).toBe(95835.7)
+    expect(m.total).toBe(100133.6)
+    expect(m.pago).toBe(12000)
+    expect(m.aberto).toBe(88133.6)
     expect(estadoPagamento(reqs[0])).toBe('Parcial')
     expect(estadoPagamento(reqs[1])).toBe('Pendente')
     expect(m.linhas[0].fase).toBe('credito')
   })
 })
 
-describe('cotação (17 Out: sempre com IVA)', () => {
+describe('cotação (sempre com IVA)', () => {
   it('writes the taxa de urgência as a line after the urgent item only (45%)', () => {
     const t = totaisCotacao({ desconto: 10, itens: [{ qt: 1, titulo: 'Branding', precoUnit: 100000, urgente: true }, { qt: 1, titulo: 'Deslocação', precoUnit: 1500, extra: true }] }, 16, 45)
     expect([t.bruto, t.desconto, t.sub, t.iva, t.total]).toEqual([146500, 14650, 131850, 21096, 152946])
-    const linhas = comUrgencia([{ qt: 2, titulo: 'Taksim®', subtitulo: 'Full Wrap S15', precoUnit: 160000, urgente: true, opcao: 1 }], 45)
+    const linhas = comUrgencia([{ qt: 2, titulo: 'Taksim®', subtitulo: 'Full Wrap Viatura', precoUnit: 150000, urgente: true, opcao: 1 }], 45)
     // 2 cars, urgent: 45% of one car, once (qt 1)
-    expect(linhas[1]).toMatchObject({ titulo: 'Taxa de urgência (45%)', subtitulo: 'Full Wrap S15', qt: 1, precoUnit: 72000, opcao: 1, gerada: true })
+    expect(linhas[1]).toMatchObject({ titulo: 'Taxa de urgência (45%)', subtitulo: 'Full Wrap Viatura', qt: 1, precoUnit: 67500, opcao: 1, gerada: true })
   })
-  it('takes the discount off before IVA (example: 120.000 − 10%)', () => {
-    const t = totaisCotacao({ desconto: 10, itens: [{ qt: 1, titulo: 'Range Rover', precoUnit: 65000 }, { qt: 1, titulo: 'BMW X3', precoUnit: 55000 }] }, 16)
-    expect([t.bruto, t.desconto, t.sub, t.iva, t.total]).toEqual([120000, 12000, 108000, 17280, 125280])
+  it('takes the discount off before IVA (example: 100.000 − 10%)', () => {
+    const t = totaisCotacao({ desconto: 10, itens: [{ qt: 1, titulo: 'Viatura A', precoUnit: 60000 }, { qt: 1, titulo: 'Viatura B', precoUnit: 40000 }] }, 16)
+    expect([t.bruto, t.desconto, t.sub, t.iva, t.total]).toEqual([100000, 10000, 90000, 14400, 104400])
   })
   it('gives each option its own total, with the items common to all (monthly services quote)', () => {
-    const fixo = [{ qt: 1, titulo: 'Website', precoUnit: 15000 }, { qt: 1, titulo: 'Spot', precoUnit: 18000 }, { qt: 1, titulo: 'Redes', precoUnit: 4000 }]
-    const t = totaisCotacao({ itens: [{ qt: 1, secao: true, titulo: 'Projecto', precoUnit: 999 }, ...fixo, { qt: 1, opcao: 1, titulo: 'Básico', precoUnit: 10000 }, { qt: 1, opcao: 2, titulo: 'Essencial', precoUnit: 15000 }, { qt: 1, opcao: 3, titulo: 'Avançado', precoUnit: 20000 }] }, 16)
-    expect(t.opcoes.map((o) => o.total)).toEqual([54520, 60320, 66120])
-    expect(t.total).toBe(54520) // headline value = the cheapest option
+    const fixo = [{ qt: 1, titulo: 'Website', precoUnit: 12000 }, { qt: 1, titulo: 'Spot', precoUnit: 16000 }, { qt: 1, titulo: 'Redes', precoUnit: 5000 }]
+    const t = totaisCotacao({ itens: [{ qt: 1, secao: true, titulo: 'Projecto', precoUnit: 999 }, ...fixo, { qt: 1, opcao: 1, titulo: 'Básico', precoUnit: 8000 }, { qt: 1, opcao: 2, titulo: 'Essencial', precoUnit: 12000 }, { qt: 1, opcao: 3, titulo: 'Avançado', precoUnit: 18000 }] }, 16)
+    expect(t.opcoes.map((o) => o.total)).toEqual([47560, 52200, 59160])
+    expect(t.total).toBe(47560) // headline value = the cheapest option
   })
   it('sums each option across several cars (6 cars, 2 options each)', () => {
-    const carros = [[80000, 135000], [100000, 151000], [105000, 157000], [98000, 141000], [83000, 128000], [98000, 141000]]
+    const carros = [[75000, 125000], [90000, 140000], [95000, 150000], [85000, 135000], [80000, 120000], [90000, 140000]]
     const t = totaisCotacao({ itens: carros.flatMap(([a, b]) => [{ qt: 1, opcao: 1, titulo: 'Taksim', precoUnit: a }, { qt: 1, opcao: 2, titulo: 'Mactac', precoUnit: b }]) }, 16)
-    expect(t.opcoes.map((o) => o.sub)).toEqual([564000, 853000])
+    expect(t.opcoes.map((o) => o.sub)).toEqual([515000, 810000])
   })
 })

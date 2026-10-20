@@ -3,15 +3,15 @@ import { mt, num2, parseNum } from '../format'
 import { useDados } from '../state'
 import { Icon } from '../ui'
 
-// How parts are added depends on the job type (Momad, 14 Oct):
+// How parts are added depends on the job type:
 // criação de imagem = always picked from the catálogo (everything is priced
 // there); the other types = free parts (price agreed by voice, or "por cotar"),
 // with the option to add a catálogo service too (e.g. vectorização in a branding).
 export const soCatalogo = (tipo?: TipoTrabalho) => tipo === 'criacao'
 
 const EXEMPLO: Partial<Record<TipoTrabalho, string>> = {
-  branding: 'Ex.: Branding em Camião — Freightliner Argosy',
-  producao: 'Ex.: Branding em Camião — Freightliner Argosy',
+  branding: 'Ex.: Branding em Camião — 4 viaturas',
+  producao: 'Ex.: Branding em Camião — 4 viaturas',
   fornecimento: 'Ex.: Camisetes estampadas (frente e costas)',
   montagem: 'Ex.: Montagem de PPF — Toyota Hilux'
 }

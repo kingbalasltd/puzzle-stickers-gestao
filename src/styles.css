@@ -515,7 +515,7 @@ a { color: inherit; }
 .item-row input { min-width: 0; }
 @media (max-width: 599px) { .item-row input:not(.desc) { flex: 1 1 0 !important; } .item-row > .btn.icon { flex: none; } }
 
-/* Gotham — Momad's document font (only used by the generated documents) */
+/* Gotham — the company's document font (only used by the generated documents) */
 @font-face { font-family: 'Gotham PS'; src: url('/fonts/gotham-light.woff') format('woff'); font-weight: 300; font-style: normal; font-display: block; }
 @font-face { font-family: 'Gotham PS'; src: url('/fonts/gotham-light-italic.woff') format('woff'); font-weight: 300; font-style: italic; font-display: block; }
 @font-face { font-family: 'Gotham PS'; src: url('/fonts/gotham-book.woff') format('woff'); font-weight: 400; font-style: normal; font-display: block; }

@@ -7,7 +7,7 @@ import { useDados, useSessao } from '../state'
 import { Field, Icon, Modal, useToast } from '../ui'
 import { FaseBadge } from './RequisicaoForm'
 
-// Momad's phases (16 Oct): one clear step at a time, each with its own button and
+// Job phases (16 Oct): one clear step at a time, each with its own button and
 // an optional deadline. Pedido → Em negociação → Layout → Produção → Montagem → Entrega.
 export function FasesTrabalho({ t, onCotacao, onRequisicao, onPago, abrirEntrega }: { t: Trabalho; onCotacao: () => void; onRequisicao: () => void; onPago?: () => void; abrirEntrega?: boolean }) {
   const d = useDados()

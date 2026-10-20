@@ -1,8 +1,8 @@
 import { normalizarEtapa } from './calc'
 import { db, type Cotacao, type Empresa, type Requisicao, type Servico, type Trabalho, type Utilizador } from './db'
 
-// Only REAL data from Momad's documents. The example data of the first
-// prototypes is removed once per device (Empresa.seedVersao < 3).
+// What every device starts from: the company profile, the price catalogue and the owner user.
+// The example data of the first prototypes is removed once per device (Empresa.seedVersao < 3).
 
 const T = (d: string, h = '09:00') => `${d}T${h}:00.000Z`
 const meta = (data: string) => ({ createdAt: T(data), updatedAt: T(data) })
@@ -64,7 +64,7 @@ export async function semear() {
 // Small fixes that must reach devices already on the current seed version.
 async function correcoes() {
   await catalogoComIdsFixos()
-  // Catálogo in the same order as his PDF (Logotipos → Identidade → Editorial → Eventos → Extras).
+  // Catálogo in the same order as the company's PDF (Logotipos → Identidade → Editorial → Eventos → Extras).
   for (const sv of await db.servicos.toArray()) {
     const i = CATALOGO.findIndex(([, nome]) => nome === sv.nome)
     const ordem = i >= 0 ? i : 100
@@ -98,7 +98,7 @@ async function catalogoComIdsFixos() {
   }
 }
 
-// What a brand-new company starts with. Momad's real clients, jobs and documents
+// What a brand-new company starts with. The company's real clients, jobs and documents
 // live in the cloud (kb-academy · puzzle), never in this public code.
 async function semearReal() {
   if ((await db.servicos.count()) === 0)
@@ -106,7 +106,7 @@ async function semearReal() {
       CATALOGO.map(([categoria, nome, preco, diasMin, diasMax, inclui], ordem): Servico => ({ id: idCatalogo(nome), ...meta('2026-10-01'), categoria, nome, preco, diasMin, diasMax, inclui, ativo: true, ordem }))
     )
   if (!(await db.utilizadores.count()))
-    await db.utilizadores.put({ id: 'real-user-momad', ...meta('2026-10-01'), nome: 'Momad Uzeif Calú', papel: 'dono', funcao: 'Diretor criativo', telefone: '+258 82 277 7302', pin: '1234', cor: '#ffc406', ativo: true } as Utilizador)
+    await db.utilizadores.put({ id: 'real-user-momad', ...meta('2026-10-01'), nome: 'Momad', papel: 'dono', funcao: 'Diretor criativo', telefone: '+258 82 277 7302', pin: '1234', cor: '#ffc406', ativo: true } as Utilizador)
 }
 
 // Sequential codes in date order (T-2026-001…, REQ-2026-001…, COT-2026-001…).

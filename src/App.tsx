@@ -41,8 +41,8 @@ export default function App() {
     try { return localStorage.getItem('pg_sessao') } catch { return null }
   })
   const ativos = (users || []).filter((u) => !u.deleted && u.ativo)
-  // Momad (18 Oct): one password only. With a single person, the company password is the
-  // whole login — no PIN after it. The PIN screen only appears once there is a team.
+  // With a single active user the company password is the whole login: no PIN after it.
+  // The PIN screen only appears once there is a team.
   const unico = ativos.length === 1 ? ativos[0] : undefined
   const user = ativos.find((u) => u.id === uid) ?? unico
   const sair = useCallback(() => {
@@ -208,7 +208,7 @@ interface Area { id: string; l: string; i: string; abas: Aba[] }
 const AREAS: Area[] = [
   { id: 'inicio', l: 'Início', i: 'painel', abas: [{ to: 'painel', l: 'Início', naoTrab: true }] },
   { id: 'trabalhos', l: 'Trabalhos', i: 'quadro', abas: [{ to: 'trabalhos', l: 'Trabalhos' }, { to: 'agenda', l: 'Agenda' }, { to: 'relatorios', l: 'Relatórios' }] },
-  // Momad (18 Oct): the quotes get their own place in the menu.
+  // Quotes have their own area in the menu.
   { id: 'cotacoes', l: 'Cotações', i: 'cotacao', abas: [{ to: 'cotacoes', l: 'Cotações', acao: 'financas' }, { to: 'catalogos', l: 'Catálogos', naoTrab: true }] },
   { id: 'clientes', l: 'Clientes', i: 'clientes', abas: [{ to: 'clientes', l: 'Clientes', naoTrab: true }] },
   {

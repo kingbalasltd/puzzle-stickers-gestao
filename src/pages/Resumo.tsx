@@ -6,7 +6,7 @@ import { dataCurta, dataMedia, mesNome, mt, mtCurto, num2, parseNum } from '../f
 import { ir, useDados, useRota } from '../state'
 import { Empty, Field, Icon, Modal, useToast } from '../ui'
 
-// Money in and out, and the balance from the day he set it (16 Oct).
+// Money in and out, and the balance from the day it was set (16 Oct).
 export function useCaixa() {
   const d = useDados()
   return useMemo(() => {
@@ -15,7 +15,7 @@ export function useCaixa() {
   }, [d])
 }
 
-// He types what he really has today (bank + M-Pesa + cash); the app keeps it up to date.
+// The user types what the company really has today (bank + M-Pesa + cash); the app keeps it up to date.
 export function CaixaModal({ onClose }: { onClose: () => void }) {
   const d = useDados()
   const toast = useToast()
@@ -59,7 +59,7 @@ export default function Resumo() {
   }, [d.despesas, mes, r.fornecedores])
   const maxCat = Math.max(1, ...cats.map((c) => c[1]))
   const semIva = d.despesas.filter((x) => x.data.slice(0, 7) === mes).reduce((s, x) => s + despesaSemIva(x), 0)
-  // His personal spending not yet paid back or authorised, whatever the month.
+  // The owner's personal spending not yet paid back or authorised, whatever the month.
   const porResolver = d.despesas.filter((x) => x.pessoal && !x.deleted && !x.pessoalEstado)
 
   return (

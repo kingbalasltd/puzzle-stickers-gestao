@@ -7,7 +7,7 @@ import { ir, useDados } from '../state'
 import { Empty, Field, Icon, Modal, Seg, useToast } from '../ui'
 import { metodos } from './comum'
 
-// His words in the Excel "Mapa de controlo de crédito".
+// Same wording as the company's Excel "Mapa de controlo de crédito".
 const estadoTrabalho = (r: Requisicao, f: FaseReq) => (r.levantadaEm || r.estado === 'recebida' || f === 'levantada' ? 'Concluído' : f === 'rascunho' || f === 'enviada' ? 'Enviado' : 'Em produção')
 
 export default function ContasPagar() {
@@ -128,7 +128,7 @@ function PagarModal({ r, onClose }: { r: Requisicao; onClose: () => void }) {
   )
 }
 
-// Same layout as his Mapa_Credito_Academica.xlsx.
+// Same layout as the company's Mapa_Credito_Academica.xlsx.
 async function exportarMapa(nome: string, mapa: ReturnType<typeof mapaCredito>, d: ReturnType<typeof useDados>) {
   const XLSX = await import('xlsx')
   const aoa: (string | number | Date | null)[][] = [

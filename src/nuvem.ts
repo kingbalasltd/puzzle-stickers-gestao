@@ -239,7 +239,7 @@ export async function desligar(enviarAntes = true) {
 }
 
 // Leaves the app without unlinking the device: its data stays, and coming back only asks for
-// the company password (Momad, 18 Oct: one password, nothing else).
+// the company password (a company with a single user has no PIN step).
 export async function terminarSessao() {
   await sincronizar().catch(() => {})
   const n = await db.meta.get('nuvem')

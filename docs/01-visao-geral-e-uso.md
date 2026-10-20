@@ -522,7 +522,7 @@ Mostra o dinheiro que entrou e saiu, mês a mês. As setas mudam o mês.
 
 #### Pessoal (só o dono)
 
-Gastos pessoais do Momad pagos com dinheiro da empresa. Saem da caixa, mas não são custo da empresa, por isso ficam fora das despesas e do resultado do mês.
+Gastos pessoais do dono pagos com dinheiro da empresa. Saem da caixa, mas não são custo da empresa, por isso ficam fora das despesas e do resultado do mês.
 - **Gasto pessoal** no topo.
 - Números: **Por resolver**, **Reposto este ano** e **Autorizado este ano**.
 - Cada gasto por resolver tem dois botões:
@@ -628,16 +628,16 @@ A cotação recebe um número do mês: COT-001-OUT/26, COT-002-OUT/26… O mês 
 | **Wrap / Branding** | Full Wrap, Half Wrap ou Branding impresso. Escreve o texto e cria uma opção por material. |
 | **Criação de imagem** | Logotipo, identidade visual, editorial… Vem do catálogo, já com o preço e o que inclui. |
 | **Outro serviço ou produto** | Linha livre: escreve o texto e o preço. |
-| **Título de secção** | Faixa de título (ex.: PROJECTO GESTÃO MENSAL). Não tem preço e nunca vira trabalho. |
+| **Título de secção** | Faixa de título (ex.: SERVIÇOS MENSAIS). Não tem preço e nunca vira trabalho. |
 
 **Wrap / Branding, campo a campo** (cartão "Serviço impresso"):
 1. **Serviço:** Full Wrap (cobertura de 100% dos painéis), Half Wrap (toda a lateral) ou Branding (até 30%, estilo Corporativo). Cada um traz a cobertura e as partes habituais.
 2. **Estilo:** Artístico, Desportivo e/ou Corporativo.
-3. **Viatura** e **Qt.** (ex.: 5 camiões). Para outro objeto (ex.: um congelador), desmarque **É uma viatura**.
+3. **Viatura** e **Qt.** (ex.: 5 camiões). Para outro objeto (ex.: um expositor), desmarque **É uma viatura**.
 4. **Primeira linha da descrição:** é escrita sozinha. Pode mudá-la, e **Voltar ao texto automático** repõe-na.
 5. **Cobertura:** botões (de 100%, toda a lateral, até 30/40/50/55/60/75/85/100%) ou texto livre.
 6. **Inclui:** Frente, Traseira, Laterais, Portas, Capom, Bumper Frontal, Bumper Traseiro, Tejadilho, Bagageira, Guarda-lamas, Retrovisores, Pilares, Spoiler, Logotipos, Logotipo no "Chapéu", Stickers Complementares, e **Outra parte…**. A frase sai como "Inclui …", com os dois bumpers juntos e os stickers no fim.
-7. **Opções:** marque os materiais a propor (Taksim®, Mactac®, Avery Dennison®, Vynil Comum, Premium; os três primeiros vêm marcados) e escreva o preço sem IVA de cada um. Com Qt. maior que 1, o preço é por viatura e aparece a conta (ex.: "5 × = 225.000,00 MT").
+7. **Opções:** marque os materiais a propor (Taksim®, Mactac®, Avery Dennison®, Vynil Comum, Premium; os três primeiros vêm marcados) e escreva o preço sem IVA de cada um. Com Qt. maior que 1, o preço é por viatura e aparece a conta (ex.: "5 × = 200.000,00 MT").
 8. **Layout:** a nota final (Layout ainda por definir, Layout já definido, …pelo cliente, …+ melhoria).
 9. **Juntar à cotação (N opções):** só fica ativo com a viatura escrita e pelo menos um material marcado.
    - Cada material marcado vira uma linha "Opção 1", "Opção 2"… No PDF, a linha sai como "OPÇÃO 1 - Taksim®", com o material a vermelho e a garantia da marca.

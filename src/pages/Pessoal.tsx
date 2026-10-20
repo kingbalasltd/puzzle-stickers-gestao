@@ -6,9 +6,9 @@ import { dataMedia, mesNome, mt, num2, parseNum } from '../format'
 import { useDados } from '../state'
 import { Empty, Field, Icon, Modal, useToast } from '../ui'
 
-// Momad (18 Oct): his personal spending paid with the company's money. It leaves the caixa,
+// The owner's personal spending paid with the company's money. It leaves the caixa,
 // but it is not a cost of the business, so it stays out of the expenses and the month result.
-// Each one is then settled: paid back (the money returns to the caixa) or authorised as his use.
+// Each one is then settled: paid back (the money returns to the caixa) or authorised as the owner's use.
 
 const METODOS = ['M-Pesa', 'e-Mola', 'Transferência', 'Numerário', 'POS', 'Cheque']
 const ESTADO = { reposto: 'Reposto', autorizado: 'Autorizado como meu uso' }

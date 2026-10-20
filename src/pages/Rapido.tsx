@@ -80,7 +80,7 @@ async function documentarPagamentos(pagamentos: Pagamento[], jobs: string[], doc
   }
 }
 
-// Invoice from his own invoice book: the app never numbers invoices, it keeps his number and the file.
+// Invoice from the company's own invoice book: the app never numbers invoices, it keeps the book's number and the file.
 export function EmitirFatura({ onClose, trabalhoId, tipoInicial }: { onClose: () => void; trabalhoId?: string; tipoInicial?: 'fatura' | 'fatura-recibo' }) {
   const d = useDados()
   const { user } = useSessao()

@@ -1,7 +1,7 @@
-// Reads Momad's own files so he only has to upload them:
+// Reads the company's own files so the user only has to upload them:
 //  - Académica PDFs (Primavera): pró-forma, fatura, recibo
-//  - his print lists, as the Excel sheet or the PDF exported from it
-// Scanned documents have no text layer and return null (needs OCR/AI later).
+//  - the company's print lists, as the Excel sheet or the PDF exported from it
+// Scanned documents have no text layer and return null (they would need OCR).
 
 import type { LinhaImpressao } from './db'
 
@@ -24,7 +24,7 @@ export function linhasDeItens(items: ItemTexto[]): string[] {
   return out
 }
 
-// "14 460,00", "1 150,00 MTn", "4,176.00", "16773.6" → number
+// "12 345,00", "1 234,00 MTn", "4,321.00", "12345.6" → number
 export function numeroPt(s: string): number {
   const t = s.replace(/MTn?|MZN/gi, '').replace(/[\s ]/g, '').trim()
   if (!t) return NaN
@@ -81,7 +81,7 @@ export function lerAcademica(linhas: string[]): DocAcademica | null {
   }
   const m2m = texto.match(/METROS\s+QUADRADOS:\s*([\d.,]+)/i)
 
-  // Print names may wrap: "…_Quester_CWE" + "_330_MATERIAL_PRINT_1".
+  // Print names may wrap: "…_Camiao_Modelo" + "_X_MATERIAL_PRINT_1".
   const juntas: string[] = []
   for (const l of linhas) {
     const ant = juntas[juntas.length - 1] || ''

@@ -6,10 +6,10 @@ import { numeroPt } from './leitura'
 
 describe('números', () => {
   it('reads both money formats', () => {
-    expect(numeroPt('14 460,00')).toBe(14460)
-    expect(numeroPt('1 150,00 MTn')).toBe(1150)
-    expect(numeroPt('4,176.00')).toBe(4176)
-    expect(numeroPt('68.000,00 MT')).toBe(68000)
+    expect(numeroPt('12 345,00')).toBe(12345)
+    expect(numeroPt('1 234,00 MTn')).toBe(1234)
+    expect(numeroPt('4,321.00')).toBe(4321)
+    expect(numeroPt('56.000,00 MT')).toBe(56000)
     expect(numeroPt('7,23')).toBe(7.23)
   })
 })

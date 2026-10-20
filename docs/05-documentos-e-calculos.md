@@ -15,7 +15,7 @@ Regras comuns:
 
 - A aplicação **nunca emite faturas**. Cotações e requisições têm numeração interna (`numeroDoMes`). As faturas e os recibos continuam com o número do livro do Momad.
 - A cotação imprime sempre "**Não serve de comprovativo fiscal".
-- Os valores saem no formato dos documentos dele, `68.000,00 MT` (função `mt` em `src/format.ts`). As datas dos documentos saem como "14 de Outubro de 2026" (`dataDoc`).
+- Os valores saem no formato dos documentos da empresa, `56.000,00 MT` (função `mt` em `src/format.ts`). As datas dos documentos saem como "14 de Outubro de 2026" (`dataDoc`).
 - A cotação e a requisição usam o Gotham (família `Gotham PS`). São 8 ficheiros `gotham-*.woff` (light, book, medium e bold, cada um normal e itálico) que têm de estar em `public/fonts/`. Não estão neste repositório por serem de uma fonte comercial: sem eles, o navegador usa outra fonte e os PDFs perdem o aspecto original. Os `@font-face` estão em `src/styles.css`, com `font-display: block`. A relação do IVA usa Montserrat.
 
 ---
@@ -170,7 +170,7 @@ Passos:
    - repete até caber, no máximo 50 voltas.
 6. Se a página já só tem esse item e mesmo assim não cabe, junta uma última página só com os totais.
 
-Resultado: as páginas de continuação vão até ao rodapé, e a última página leva, em regra, o último item junto com os totais. Foi o que o Momad pediu em 17 de Outubro de 2026: "a página a seguir deve ter muita coerência".
+Resultado: as páginas de continuação vão até ao rodapé, e a última página leva, em regra, o último item junto com os totais. Esta regra foi definida a 17 de Outubro de 2026: as páginas seguintes devem continuar a cotação com coerência.
 
 ### Uma série de páginas por opção: `paginasCotacao()`
 
@@ -313,7 +313,7 @@ Exemplo com as partes do Full Wrap: "Inclui Laterais, Capom, Bumper Frontal e Tr
 
 ### Formulário: `src/pages/cotacaoFormulario.tsx`
 
-`EditorCotacao` segue a organização que o Momad pediu em 18 de Outubro de 2026: "cada linha é um serviço/produto".
+`EditorCotacao` segue a organização definida a 18 de Outubro de 2026: cada linha da cotação é um serviço ou produto.
 
 | Secção | O que faz |
 |---|---|
@@ -641,7 +641,7 @@ Devolve o que se deve aos fornecedores: as requisições não apagadas, com pró
 - **Entra**: requisições não apagadas com pró-forma, crédito, pagamentos ou marca `pago`.
 - **Cada linha**: `{ r, valor, pago, saldo, estado, fase }`, ordenada pela data da requisição e pelo número da pró-forma.
 - **Totais**: `total`, `pago` e `aberto`, arredondados.
-- O teste reproduz os totais do Excel do Momad: 114.554,50 / 18.718,80 / 95.835,70.
+- O teste confirma os totais de um mapa de exemplo: 100.133,60 / 12.000 / 88.133,60.
 
 ### Caixa
 
@@ -778,23 +778,23 @@ Correm com `npm test` (Vitest, ambiente `node`).
 
 | Grupo | O que fixa |
 |---|---|
-| Lista de impressão | Uma folha real: 10,2225 m² (10,22 no ecrã) × 2.000 = 20.445,00, mais IVA 3.271,20, dá 23.716,20. Com materiais misturados por linha: `precoM2` 0, subtotal 9.700, IVA 1.552, total 11.252 |
-| Trabalho | Uma cotação real: 133.000 + 21.280 = 154.280. Urgência de 45% antes do IVA: 10.000 → 14.500 → 16.820. `resumoTrabalho`: total 116.000, dívida 58.000, sinal pago, custo 20.000 + 5.000, lucro 75.000, atrasado, 9 dias |
-| IVA mensal | Liquidado 21.120 (com a nota de crédito descontada), dedutível 3.271,20, a pagar 17.848,80, um recibo ignorado. Crédito de 500 quando as compras passam as vendas |
-| Agenda | Dias úteis (sexta → segunda). Fases por tipo e o tipo antigo `producao`. `normalizarEtapa`. `contaParaReceber`. `itensAgenda` e `secaoAgenda`. `numeroDoMes` (recomeço mensal e formato antigo ignorado). Caixa: saldo de 100.000 a 16 Out → 130.140; resumo de Outubro e salário de Outubro pago em Novembro. `prazoAtual` |
+| Lista de impressão | Uma folha de exemplo: 10,54 m² × 2.000 = 21.080,00, mais IVA 3.372,80, dá 24.452,80. Com materiais misturados por linha: `precoM2` 0, subtotal 9.700, IVA 1.552, total 11.252 |
+| Trabalho | Uma cotação de exemplo: 110.000 + 17.600 = 127.600. Urgência de 45% antes do IVA: 10.000 → 14.500 → 16.820. `resumoTrabalho`: total 116.000, dívida 58.000, sinal pago, custo 20.000 + 5.000, lucro 75.000, atrasado, 9 dias |
+| IVA mensal | Liquidado 17.440 (com a nota de crédito descontada), dedutível 3.372,80, a pagar 14.067,20, um recibo ignorado. Crédito de 500 quando as compras passam as vendas |
+| Agenda | Dias úteis (sexta → segunda). Fases por tipo e o tipo antigo `producao`. `normalizarEtapa`. `contaParaReceber`. `itensAgenda` e `secaoAgenda`. `numeroDoMes` (recomeço mensal e formato antigo ignorado). Caixa: saldo de 100.000 a 16 Out → 129.840; resumo de Outubro e salário de Outubro pago em Novembro. `prazoAtual` |
 | Despesas | Vencimento no dia 31 → 28 de Fevereiro. Estados paga / atrasada / pendente. Janela 25 → 5, incluindo Dezembro → Janeiro, com os estados pendente, a pagar, atrasada e paga. O salário de Outubro pago em Novembro conta no resultado de Outubro. `resultadoDoMes` = 100.000 − 12.500 − 29.000 = 58.500, sem contar rascunhos |
-| Ciclo Académica | Totais de quatro pró-formas reais (28.953,60; 16.773,60 com subtotal 14.460, valor de duas delas; 6.542,40) e de uma lista em Excel (16.112 / 18.689,92). Sequência rascunho → enviada → pró-forma → crédito → levantada. Encomenda: 2 × 12.500 + IVA = 29.000 |
-| Mapa de crédito | Totais do Excel do Momad: 114.554,50 / 18.718,80 / 95.835,70. Estados Parcial e Pendente. Fase crédito |
-| Cotação | Urgência como linha própria + desconto: 146.500 / 14.650 / 131.850 / 21.096 / 152.946. Linha de urgência com qt 1 e 72.000 para 2 × 160.000. Desconto antes do IVA: 120.000 − 10% → 125.280. Opções com itens comuns: 54.520 / 60.320 / 66.120 (valor principal 54.520). Seis carros com duas opções: sub-totais 564.000 / 853.000 |
+| Ciclo do fornecedor | Totais de quatro pró-formas de exemplo (26.726,40; 15.683,20 com subtotal 13.520, valor de duas delas; 6.264) e de uma lista (15.340 / 17.794,40). Sequência rascunho → enviada → pró-forma → crédito → levantada. Encomenda: 2 × 12.500 + IVA = 29.000 |
+| Mapa de crédito | Totais de um mapa de exemplo: 100.133,60 / 12.000 / 88.133,60. Estados Parcial e Pendente. Fase crédito |
+| Cotação | Urgência como linha própria + desconto: 146.500 / 14.650 / 131.850 / 21.096 / 152.946. Linha de urgência com qt 1 e 67.500 para 2 × 150.000. Desconto antes do IVA: 100.000 − 10% → 104.400. Opções com itens comuns: 47.560 / 52.200 / 59.160 (valor principal 47.560). Seis carros com duas opções: sub-totais 515.000 / 810.000 |
 
 ### Testes de render
 
 - `src/cotacaoPdf.render.test.tsx`:
-  - pagina uma cotação real de 14 de Outubro de 2026 com `paginar` e confirma que cabe numa página, com as caixas dos itens em 219,4 / 303,5 / 411,1 / 518,2 (diferença menor que 1,2 pt);
-  - escreve `test/out/cotacao.html`, para imprimir com o Chrome e comparar com o PDF original;
+  - pagina uma cotação de exemplo com `paginar` e confirma que cabe numa página, com as caixas dos itens em 219,4 / 303,5 / 411,1 / 518,2 (diferença menor que 1,2 pt);
+  - escreve `test/out/cotacao.html`, para imprimir com o Chrome e comparar com o modelo da empresa;
   - para medir sem browser, usa `test/fixtures/gotham-advances.json`, com a largura de cada caractere do Gotham. Este ficheiro está no repositório.
 - `src/requisicaoPdf.render.test.tsx`:
-  - confirma `totaisLinhas` com materiais misturados: Bundle Wrap 17.160 (8,58 m² × 2.000), ContraVision 1.380, vinil transparente premium + laminação transparente premium 896, Banner 2.850, subtotal 22.286;
+  - confirma `totaisLinhas` com materiais misturados: Bundle Wrap 15.840 (7,92 m² × 2.000), ContraVision 1.380, vinil transparente premium + laminação transparente premium 896, Banner 2.850, subtotal 20.966;
   - escreve `test/out/requisicao.html` para uma verificação visual.
 
 Mudar `TOPO_ITENS`, `ITEM`, `BLOCO` ou a largura das descrições (`COL.totX1`, de que depende `LARGURA_DESC`) em `src/cotacaoPdf.tsx` altera as posições que o teste da cotação verifica.
@@ -831,4 +831,4 @@ Estão planeados mas **não implementados**.
 - Não grave linhas com `gerada: true` na cotação. `comUrgencia` não acrescenta urgência quando já há linhas geradas.
 - Carregue sempre as fontes antes de medir texto (`carregarFontes`). Medir com a fonte de recurso desarruma as quebras e a paginação.
 - O resumo do trabalho conta as requisições em rascunho como custo. O resultado do mês não as conta.
-- O Gotham é uma fonte comercial: não está neste repositório e o site publicado serve os ficheiros de `public/fonts/`. Convém confirmar que a licença da Puzzle Stickers cobre este uso.
+- O Gotham é uma fonte comercial e não está neste repositório. Os ficheiros da empresa copiam-se para `public/fonts/`.

@@ -6,7 +6,7 @@ import type { Dados } from './state'
 import { CSS_REQUISICAO, linhasComMaterial, PaginaRequisicao } from './requisicaoPdf'
 import { Icon, Modal } from './ui'
 
-// Documents the app issues come out as real PDF files (Momad, 16 Oct: "sempre em PDF"),
+// Documents the app issues come out as real PDF files (since 16 Oct: always PDF),
 // made on the device so it works offline too: the page is drawn off-screen and turned
 // into an A4 PDF. Sending happens from a "PDF pronto" window, because phones only let a
 // page open the share sheet straight from a tap.

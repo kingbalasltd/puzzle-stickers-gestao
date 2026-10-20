@@ -122,7 +122,7 @@ export default function Definicoes() {
         </div>
       </div>
       <CartaoNuvem />
-      {conf === 'exemplos' && <Confirm text="Apaga os trabalhos, pagamentos, documentos e pessoas marcados como exemplo. Ficam a empresa, o catálogo, o Momad, os clientes reais e a Académica Digital." ok="Apagar exemplos" onOk={async () => { await apagarExemplos(); toast('Exemplos apagados') }} onClose={() => setConf(null)} />}
+      {conf === 'exemplos' && <Confirm text="Apaga os trabalhos, pagamentos, documentos e pessoas marcados como exemplo. Ficam a empresa, o catálogo, o dono, os clientes reais e os fornecedores." ok="Apagar exemplos" onOk={async () => { await apagarExemplos(); toast('Exemplos apagados') }} onClose={() => setConf(null)} />}
       {conf === 'repor' && <Confirm text="Apaga os dados DESTE aparelho. O que já está na nuvem fica guardado e volta a descer quando entrar outra vez; alterações que ainda não subiram perdem-se." ok="Recomeçar" onOk={async () => { await desligar(); await repor() }} onClose={() => setConf(null)} />}
     </Page>
   )

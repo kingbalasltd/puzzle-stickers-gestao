@@ -1,7 +1,7 @@
 import { Page } from '../App'
 import { Icon, useToast } from '../ui'
 
-// Momad (18 Oct): his catalogues, ready to send in a couple of taps. The PDFs ship with the app
+// The company's catalogues, ready to send in a couple of taps. The PDFs ship with the app
 // (public/catalogos), so the link works for any client and the file is the same on every device.
 const CATALOGOS = [
   { id: 'criacao-de-imagem-2026', nome: 'Criação de Imagem', ano: 2026, paginas: 21, mb: 4.7, deitado: true },
@@ -33,7 +33,7 @@ export default function Catalogos() {
     setTimeout(() => URL.revokeObjectURL(a.href), 10_000)
     toast('PDF descarregado')
   }
-  // Or just the link: WhatsApp opens and he picks the contact.
+  // Or just the link: WhatsApp opens and the user picks the contact.
   const whatsapp = (c: (typeof CATALOGOS)[number]) => {
     const texto = encodeURIComponent(`Olá! Segue o nosso catálogo de ${c.nome}: ${link(c.id)}`)
     window.location.href = telemovel() ? `https://wa.me/?text=${texto}` : `whatsapp://send?text=${texto}`

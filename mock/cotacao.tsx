@@ -6,7 +6,7 @@ import { CATALOGO, EMPRESA } from '../src/seed'
 import { MATERIAIS_COTACAO as M, TEXTOS_FINAIS } from '../src/materiaisCotacao'
 import { EditorCotacao, PreviewCotacao } from '../src/pages/cotacaoFormulario'
 
-// Dev-only page to show Momad the proposed quote form with examples taken from his own quotes.
+// Dev-only preview of the quote form, with sample quotes.
 // ?v=fone|pc|a4 &ex=wrap|escola|mensal &aberto=N
 
 const base = { id: 'x', updatedAt: '2026-10-17T00:00:00.000Z', validadeDias: 30, estado: 'rascunho' as const }
@@ -15,40 +15,40 @@ const wrap = 'Impresso em vynil  com aplicação do respectivo protector materia
 
 const EXEMPLOS: Record<string, Cotacao> = {
   wrap: {
-    ...base, numero: 'COT-004-OUT/26', data: '2026-10-17', clienteId: 'cliente-a', notas: texto('Pedir layouts'),
+    ...base, numero: 'COT-001-JAN/26', data: '2026-01-15', clienteId: 'cliente-a', notas: texto('Pedir layouts'),
     itens: [
-      { qt: 1, opcao: 1, titulo: 'Taksim®', subtitulo: 'Full Wrap BMW E92', precoUnit: 145000, descricao: `Full Wrap em Viatura Bmw E92\nInclui Cobertura até 100% dos painéis e Stickers Complementares\n${wrap}`, materiais: [M[0], M[5]], nota: '** Layout já deﬁnido pelo cliente' },
-      { qt: 1, opcao: 2, titulo: 'Mactac®', subtitulo: 'Full Wrap BMW E92', precoUnit: 175000, descricao: `Full Wrap em Viatura Bmw E92\nInclui Cobertura até 100% dos painéis e Stickers Complementares\n${wrap}`, materiais: [M[1]], nota: '** Layout já deﬁnido pelo cliente' },
-      { qt: 1, opcao: 3, titulo: 'Avery Dennison®', subtitulo: 'Full Wrap BMW E92', precoUnit: 220000, descricao: `Full Wrap em Viatura Bmw E92\nInclui Cobertura até 100% dos painéis e Stickers Complementares\n${wrap}`, materiais: [M[2]], nota: '** Layout já deﬁnido pelo cliente' }
+      { qt: 1, opcao: 1, titulo: 'Taksim®', subtitulo: 'Full Wrap Viatura Exemplo', precoUnit: 120000, descricao: `Full Wrap em Viatura Exemplo\nInclui Cobertura até 100% dos painéis e Stickers Complementares\n${wrap}`, materiais: [M[0], M[5]], nota: '** Layout já deﬁnido pelo cliente' },
+      { qt: 1, opcao: 2, titulo: 'Mactac®', subtitulo: 'Full Wrap Viatura Exemplo', precoUnit: 150000, descricao: `Full Wrap em Viatura Exemplo\nInclui Cobertura até 100% dos painéis e Stickers Complementares\n${wrap}`, materiais: [M[1]], nota: '** Layout já deﬁnido pelo cliente' },
+      { qt: 1, opcao: 3, titulo: 'Avery Dennison®', subtitulo: 'Full Wrap Viatura Exemplo', precoUnit: 190000, descricao: `Full Wrap em Viatura Exemplo\nInclui Cobertura até 100% dos painéis e Stickers Complementares\n${wrap}`, materiais: [M[2]], nota: '** Layout já deﬁnido pelo cliente' }
     ]
   },
   escola: {
-    ...base, numero: 'COT-005-OUT/26', data: '2026-10-17', clienteId: 'cliente-b', notas: texto('Projecto'), desconto: 10,
+    ...base, numero: 'COT-002-JAN/26', data: '2026-01-15', clienteId: 'cliente-b', notas: texto('Projecto'), desconto: 5,
     itens: [
-      { qt: 1, titulo: 'Criação de Logotipo Institucional', subtitulo: 'Criação do símbolo e assinatura visual', precoUnit: 10000, descricao: '• Criação do Logotipo;\n• Desenvolvimento e normalização das versões oﬁciais do Logotipo;\n• Criação das versões policromática, monocromática e em escala de cinzentos;\n• Entrega dos ﬁcheiros ﬁnais para utilização digital e impressão.' },
-      { qt: 1, titulo: 'Manual de Identidade Visual Institucional', subtitulo: 'Criação e estruturação do sistema de identidade', precoUnit: 50000, descricao: '• Desenvolvimento do Guia Normativo de Identidade Visual Institucional;\n• Estruturação gráﬁca, normativa e operacional da identidade institucional;\n• Criação e normalização da paleta cromática, tipograﬁa e elementos gráﬁcos institucionais;\n• Desenvolvimento de backgrounds, ícones, padrões visuais e aplicações institucionais complementares;\n• Estruturação visual para materiais administrativos, comunicação institucional, viaturas, sinalização, uniformes, autocolantes, dísticos, selos e todos outros elementos necessários (a serem deﬁnidos);\n• Deﬁnição das normas de utilização, coerência visual e aplicações permitidas da identidade institucional;\n• Entrega de ﬁcheiros técnicos, elementos gráﬁcos e materiais institucionais para facilitar futuras produções e aplicações.' },
-      { qt: 1, titulo: 'Website e Sistema de Gestão Institucional', subtitulo: 'Presença digital e plataforma integrada', precoUnit: 50000, descricao: '• Website institucional com áreas de informação, notícias, contactos e matrículas;\n• Estrutura preparada para direcção, colaboradores, professores, alunos, encarregados e todos os departamentos integrantes no funcionamento da instituição;\n• Área administrativa, perﬁs de acesso, comunicação escolar e formulários;\n• Desenvolvimento responsivo para computador, tablet e telemóvel.' },
-      { qt: 1, titulo: 'Pacote Marketing Inicial', subtitulo: 'Pacote base para divulgação da instituição', precoUnit: 25000, descricao: '• 1 Spot (Vídeo) Publicitário\n• 5 Cartazes grátis para divulgação "urgente"' }
+      { qt: 1, titulo: 'Logotipo', subtitulo: 'Símbolo e assinatura', precoUnit: 12000, descricao: '• Proposta de logotipo com 2 revisões;\n• Versões a cores e a preto;\n• Ficheiros para digital e impressão.' },
+      { qt: 1, titulo: 'Identidade Visual', subtitulo: 'Regras de uso da marca', precoUnit: 35000, descricao: '• Guia normativo da identidade visual;\n• Paleta de cores, tipograﬁa e elementos gráﬁcos;\n• Aplicações em papelaria, viaturas, sinalização e uniformes;\n• Entrega de ﬁcheiros técnicos para futuras produções.' },
+      { qt: 1, titulo: 'Website', subtitulo: 'Site com área de gestão', precoUnit: 42000, descricao: '• Website com informação, notícias e contactos;\n• Área administrativa com perﬁs de acesso e formulários;\n• Funciona em computador, tablet e telemóvel.' },
+      { qt: 1, titulo: 'Pacote de Divulgação', subtitulo: 'Lançamento da marca', precoUnit: 18000, descricao: '• 1 Spot (Vídeo) Publicitário\n• 5 Cartazes para divulgação' }
     ]
   },
   mensal: {
-    ...base, numero: 'COT-006-OUT/26', data: '2026-10-17', clienteId: 'cliente-b', notas: texto('Padrão'),
+    ...base, numero: 'COT-003-JAN/26', data: '2026-01-15', clienteId: 'cliente-b', notas: texto('Padrão'),
     itens: [
-      { qt: 1, secao: true, titulo: 'Projecto Gestão Mensal', precoUnit: 0 },
-      { qt: 1, titulo: 'Gestão Mensal Website e Sistema', subtitulo: 'Assistência completa', precoUnit: 15000 },
-      { qt: 1, titulo: 'Spot Publicitário', subtitulo: '1 Spot por mês', precoUnit: 18000 },
-      { qt: 1, titulo: 'Gestão de Redes Sociais', subtitulo: 'Criação e gestão', precoUnit: 4000 },
-      { qt: 1, secao: true, titulo: 'Gestão de Marketing', precoUnit: 0 },
-      { qt: 1, opcao: 1, titulo: 'Pacote Básico', subtitulo: '5 Cartazes Mensais', precoUnit: 10000, descricao: 'Inclui datas comemorativas do calendário' },
-      { qt: 1, opcao: 2, titulo: 'Pacote Essencial', subtitulo: '10 Cartazes Mensais', precoUnit: 15000, descricao: 'Inclui datas comemorativas do calendário' },
-      { qt: 1, opcao: 3, titulo: 'Pacote Avançado', subtitulo: '20 Cartazes Mensais', precoUnit: 20000, descricao: 'Inclui datas comemorativas do calendário' }
+      { qt: 1, secao: true, titulo: 'Serviços Mensais', precoUnit: 0 },
+      { qt: 1, titulo: 'Manutenção do Website', subtitulo: 'Actualizações e suporte', precoUnit: 9000 },
+      { qt: 1, titulo: 'Vídeo Publicitário', subtitulo: '1 vídeo por mês', precoUnit: 14000 },
+      { qt: 1, titulo: 'Redes Sociais', subtitulo: 'Publicações e respostas', precoUnit: 6000 },
+      { qt: 1, secao: true, titulo: 'Cartazes', precoUnit: 0 },
+      { qt: 1, opcao: 1, titulo: 'Pacote 1', subtitulo: '4 cartazes por mês', precoUnit: 7000 },
+      { qt: 1, opcao: 2, titulo: 'Pacote 2', subtitulo: '8 cartazes por mês', precoUnit: 11000 },
+      { qt: 1, opcao: 3, titulo: 'Pacote 3', subtitulo: '15 cartazes por mês', precoUnit: 16000 }
     ]
   }
 }
 
 const CLIENTES = [
   { id: 'cliente-a', nome: 'Cliente Exemplo', cidade: 'Maputo, Moçambique' },
-  { id: 'cliente-b', nome: 'Escola Exemplo', cidade: 'Matola, Moçambique' }
+  { id: 'cliente-b', nome: 'Escola Exemplo', cidade: 'Maputo, Moçambique' }
 ] as Cliente[]
 const SERVICOS = CATALOGO.map(([categoria, nome, preco, diasMin, diasMax, inclui], i): Servico => ({ id: `s${i}`, updatedAt: '', categoria, nome, preco, diasMin, diasMax, inclui, ativo: true, ordem: i }))
 

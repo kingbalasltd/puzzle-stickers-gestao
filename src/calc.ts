@@ -26,7 +26,7 @@ export const ETAPAS: { id: Etapa; nome: string; curto: string; cor: string }[] =
   { id: 'entregue', nome: 'Entregue', curto: 'Entregue', cor: '#2bb673' }
 ]
 
-// The 4 kinds of work Momad described (14 Oct). Every job walks the same phases
+// The 4 kinds of work the company does (14 Oct). Every job walks the same phases
 // (16 Oct); each kind simply leaves out the ones it does not need.
 export const TIPOS: { id: Exclude<TipoTrabalho, 'producao'>; nome: string; curto: string; desc: string; icone: string; seq: Etapa[] }[] = [
   { id: 'branding', nome: 'Branding / wrap', curto: 'BRANDING', icone: 'imprimir', desc: 'Viaturas e camiões: layout, produção na Académica e montagem.', seq: ['pedido', 'negociacao', 'layout', 'producao', 'montagem', 'entrega', 'entregue'] },
@@ -85,7 +85,7 @@ export function etapaAnterior(t: Pick<Trabalho, 'tipo' | 'etapa'>): Etapa | null
   return i > 0 ? seq[i - 1] : null
 }
 
-// ---------- Lista de impressão (same maths as his Excel sheet) ----------
+// ---------- Lista de impressão (same maths as the company's Excel sheet) ----------
 
 export const m2Linha = (l: LinhaImpressao) => (l.qt || 0) * (l.largura || 0) * (l.comprimento || 0)
 
@@ -95,7 +95,7 @@ export function totaisRequisicao(r: Pick<Requisicao, 'linhas' | 'precoImpressaoM
     const iva = r.comIva ? r2(subtotal * (taxaIva / 100)) : 0
     return { m2: 0, precoM2: 0, subtotal, iva, total: r2(subtotal + iva) }
   }
-  // His sheet multiplies the unrounded m² by the price, then rounds money.
+  // The sheet multiplies the unrounded m² by the price, then rounds money.
   const m2 = r.linhas.reduce((s, l) => s + m2Linha(l), 0)
   const base = (r.precoImpressaoM2 || 0) + (r.precoLaminacaoM2 || 0)
   // Each print can have its own material (16 Oct); a print without one uses the list's material.
@@ -109,7 +109,7 @@ export function totaisRequisicao(r: Pick<Requisicao, 'linhas' | 'precoImpressaoM
 
 // ---------- Cotação ----------
 
-// Taxa de urgência (Momad, 18 Oct): the % of ONE unit of the urgent item (qt 1 — on 5 cars it is
+// Taxa de urgência (18 Oct): the % of ONE unit of the urgent item (qt 1 — on 5 cars it is
 // not charged 5 times), written as its own line right after it, like the Deslocação. The line
 // belongs to the item's option.
 export function comUrgencia(itens: ItemCotacao[], pct: number): ItemCotacao[] {
@@ -121,7 +121,7 @@ export function comUrgencia(itens: ItemCotacao[], pct: number): ItemCotacao[] {
   )
 }
 
-// Every quote includes IVA (Momad, 17 Oct); the discount comes off before IVA. With options
+// Every quote includes IVA (17 Oct); the discount comes off before IVA. With options
 // (Taksim / Mactac / Avery…) the client picks one, so each option has its own total: its
 // items plus the items that belong to no option.
 export function totaisCotacao(c: Pick<Cotacao, 'itens'> & { desconto?: number }, taxaIva: number, urgenciaPct = 0) {
@@ -306,7 +306,7 @@ const diaDoMes = (mes: string, dia: number) => {
   return `${mes}-${String(Math.min(Math.max(1, dia || 1), ultimo)).padStart(2, '0')}`
 }
 
-// When the fixed expenses of `mes` are paid. Momad pays from the 25th of the month to
+// When the fixed expenses of `mes` are paid. They are paid from the 25th of the month to
 // the 5th of the next one: a window that opens after its closing day ends next month.
 export function janelaFixa(f: Pick<DespesaFixa, 'dia' | 'abre'>, mes: string) {
   const fecha = f.abre && f.abre > f.dia ? addMeses(mes, 1) : mes
@@ -408,7 +408,7 @@ export function contasAPagar(reqs: Requisicao[], taxaIva: number) {
     .sort((a, b) => a.desde.localeCompare(b.desde) || (a.r.proforma?.numero || a.r.numero).localeCompare(b.r.proforma?.numero || b.r.numero))
 }
 
-// His "Mapa de controlo de crédito": every supplier job with value, paid and balance.
+// The company's "Mapa de controlo de crédito": every supplier job with value, paid and balance.
 export function mapaCredito(reqs: Requisicao[], taxaIva: number) {
   const linhas = reqs
     .filter((r) => !r.deleted && (r.proforma || r.pagamento === 'credito' || r.pagamentos?.length || r.pagamento === 'pago'))
@@ -461,12 +461,12 @@ export function secaoAgenda(i: ItemAgenda, hoje: string): SecaoAgenda {
   return 'depois'
 }
 
-// Money received that still has no fatura-recibo / recibo: Momad has to pass the document.
+// Money received that still has no fatura-recibo / recibo: the document still has to be issued.
 export const semDocumento = (pagamentos: Pagamento[], trabalhoId?: string) =>
   pagamentos.filter((p) => !p.deleted && !p.reciboId && (!trabalhoId || p.trabalhoId === trabalhoId)).sort((a, b) => a.data.localeCompare(b.data))
 
-// Momad's numbering (16 Oct) for quotes and supplier orders: COT-002-OUT/26, REQ-001-OUT/26.
-// The count restarts every month. These are not invoices: invoices keep the number of his book.
+// Numbering (16 Oct) for quotes and supplier orders: COT-002-OUT/26, REQ-001-OUT/26.
+// The count restarts every month. These are not invoices: invoices keep the number of the company's book.
 const MESES_NUM = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
 export function numeroDoMes(prefixo: 'COT' | 'REQ', existentes: string[], data: string) {
   const sufixo = `${MESES_NUM[Number(data.slice(5, 7)) - 1]}/${data.slice(2, 4)}`
@@ -477,7 +477,7 @@ export function numeroDoMes(prefixo: 'COT' | 'REQ', existentes: string[], data: 
 
 // ---------- Caixa: money in and out (16 Oct) ----------
 // In: what clients paid. Out: purchases, paid fixed expenses and payments to suppliers,
-// each kept apart. Cash view: a supplier counts when he is paid, not when the order goes.
+// each kept apart. Cash view: a supplier counts when it is paid, not when the order goes.
 
 export type Movimento = { data: string; em?: string; tipo: 'entrada' | 'saida'; origem: 'cliente' | 'compra' | 'fixa' | 'fornecedor' | 'pessoal' | 'reposicao'; valor: number; texto: string; ref?: string }
 
@@ -487,7 +487,7 @@ export function movimentosCaixa(pagamentos: Pagamento[], despesas: Despesa[], re
   for (const x of despesas) {
     if (x.deleted) continue
     out.push({ data: x.data, em: x.createdAt, tipo: 'saida', origem: x.pessoal ? 'pessoal' : x.fixaId ? 'fixa' : 'compra', valor: x.valor, texto: x.descricao, ref: x.id })
-    // A personal expense he paid back: the money comes back into the caixa that day.
+    // A personal expense paid back: the money comes back into the caixa that day.
     if (x.pessoal && x.pessoalEstado === 'reposto' && x.pessoalEm) out.push({ data: x.pessoalEm, em: x.updatedAt, tipo: 'entrada', origem: 'reposicao', valor: x.valor, texto: `Reposição: ${x.descricao}`, ref: x.id })
   }
   for (const r of requisicoes) {
@@ -498,7 +498,7 @@ export function movimentosCaixa(pagamentos: Pagamento[], despesas: Despesa[], re
   return out.sort((a, b) => a.data.localeCompare(b.data) || (a.em || '').localeCompare(b.em || ''))
 }
 
-// The balance he typed, plus everything that moved after it.
+// The balance the user typed, plus everything that moved after it.
 export function saldoCaixa(movs: Movimento[], caixa?: { valor: number; data: string; em: string }) {
   if (!caixa) return undefined
   const depois = movs.filter((m) => m.data > caixa.data || (m.data === caixa.data && !!m.em && m.em > caixa.em))

@@ -3,9 +3,9 @@ import { db } from './db'
 import { comUrgencia, totaisCotacao } from './calc'
 import { dataDoc, mt } from './format'
 
-// Momad's quote, rebuilt from his Illustrator file (reference quote, 14 Oct 2026):
-// A4 in points (595.276 × 841.89), his background artwork as an image, and
-// every text in Gotham at the exact baseline/size/colour of his original.
+// The company's quote, rebuilt from its Illustrator file (reference quote, 14 Oct 2026):
+// A4 in points (595.276 × 841.89), the original background artwork as an image, and
+// every text in Gotham at the exact baseline/size/colour of the original.
 // 17 Oct: materials in red, options, sections, discount, and pages that continue cleanly.
 
 export const A4 = { w: 595.276, h: 841.89 }
@@ -42,7 +42,7 @@ const E = {
   garantia: { peso: 300, italico: true, tam: 10, cor: '#1a1a1a' }
 } satisfies Record<string, Estilo>
 
-// Measured on his PDF.
+// Measured on the reference PDF.
 const COL = { qtX0: 30.4, qtX1: 64.0, descX0: 67.9, descX1: 348.9, unitX0: 352.8, unitX1: 456.9, totX0: 460.8, totX1: 564.9 }
 const ITEM = { altura: 39.4, base1: 17.46, base2: 32.0, primeiraDesc: 53.3, passo: 12, depois: 18.6, semDesc: 12 }
 const SECAO = { altura: 26.5, base: 17.6, depois: 12 }
@@ -51,7 +51,7 @@ const LARGURA_DESC = COL.totX1 - 30.39
 const NOTA_MATERIAL = 43 // the Taksim note sits above the totals block
 const FIM_CONTINUA = 790 // a page that continues: items run down to its footer line
 
-// The totals block of his file: box rows (SUB-TOTAL, IVA…) above the yellow TOTAL bar, which
+// The totals block of the reference file: box rows (SUB-TOTAL, IVA…) above the yellow TOTAL bar, which
 // never moves. More rows (discount, options) stack upwards, and the items end higher.
 const BLOCO = { ultimaLinha: 740.46, passo: 32.72, alturaLinha: 26.5, linhaTopo: 39.92, folga: 12.8 }
 const CAIXAS: [number, number][] = [[359.98, 454.56], [459.79, 564.51]]
@@ -102,7 +102,7 @@ function quebrar(texto: string, e: Estilo, largura: number, medir: Medir): strin
   return out
 }
 
-// His wrap items open with a medium line; a list of bullets stays light throughout.
+// Wrap items open with a medium line; a list of bullets stays light throughout.
 const estiloLinhaDesc = (l: string, i: number): Estilo => (/^\*\*\s*layout/i.test(l) ? E.descDestaque : i === 0 && !/^[•\-–]/.test(l.trim()) ? E.descPrimeira : E.descLinha)
 
 // The warranty note only means something when the quote prints on material.
@@ -134,7 +134,7 @@ export interface ItemPos {
   linhas: Linha[]
 }
 
-// The whole quote, page by page. With options (Momad, 17 Oct, as in his own quotes) each option
+// The whole quote, page by page. With options (17 Oct, as in the company's own quotes) each option
 // gets its own pages with its own SUB-TOTAL / IVA / TOTAL: the items common to all, then that option.
 export function paginasCotacao<C extends Cotacao>(semUrgencia: C, medir: Medir, urgenciaPct: number): { c: C; itens: ItemPos[]; ultima: boolean }[] {
   const c = { ...semUrgencia, itens: comUrgencia(semUrgencia.itens, urgenciaPct) }
@@ -146,7 +146,7 @@ export function paginasCotacao<C extends Cotacao>(semUrgencia: C, medir: Medir, 
   })
 }
 
-// The standard footer text, broken exactly as in his file.
+// The standard footer text, broken exactly as in the reference file.
 const NOTA_PADRAO_LINHAS = [
   'Após a aprovação da cotação, será elaborado um cronograma detal-',
   'hado com todas as fases do trabalho.',
@@ -156,7 +156,7 @@ const NOTA_PADRAO_LINHAS = [
 ]
 const NOTA_LARGURAS = [317.63, 173.88, 320.42, 120.77, 302.34]
 const NOTA_LARGURA = 320.42
-// His terms are justified: full lines stretch the spaces, never the letters.
+// The terms are justified: full lines stretch the spaces, never the letters.
 const justificada = (l: string, alvo: number, medir: Medir) => {
   const t = l.trim()
   const espacos = (t.match(/ /g) || []).length
@@ -164,7 +164,7 @@ const justificada = (l: string, alvo: number, medir: Medir) => {
 }
 const normal = (s: string) => s.replace(/ﬁ/g, 'fi').replace(/\s+/g, ' ').replace(/-\s+/g, '').trim()
 
-// The closing text sits beside the totals boxes, as in his file. When it is too long for that
+// The closing text sits beside the totals boxes, as in the reference file. When it is too long for that
 // column (a project quote), it runs full width above the totals block instead.
 function termos(c: Pick<Cotacao, 'notas'>, n: number, medir: Medir) {
   if (normal(c.notas) === normal(NOTA_PADRAO_LINHAS.join(' '))) return { lado: NOTA_PADRAO_LINHAS, cheio: [] as string[], altura: 0, padrao: true }
@@ -260,7 +260,7 @@ export function PaginaCotacao({ c, cliente, empresa, itens, ultima, pagina, tota
 }) {
   const bloco = blocoTotais(c, empresa.taxaIva, empresa.urgenciaPct)
   const n = bloco.linhas.length
-  // Plain sub-total + IVA is his own artwork, untouched; anything else is drawn on the clean page.
+  // Plain sub-total + IVA is the original artwork, untouched; anything else is drawn on the clean page.
   const original = ultima && n === 2
   const H = topoBloco(n)
   const tx = termos(c, n, medir)

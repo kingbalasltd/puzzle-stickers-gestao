@@ -25,7 +25,7 @@ export function FaseBadge({ r }: { r: Requisicao }) {
 
 type Aba = 'pedido' | 'circuito'
 
-// Default material of a new order: Bundle Wrap when the supplier has it (most of his work is wrap).
+// Default material of a new order: Bundle Wrap when the supplier has it (most of the company's work is wrap).
 function baseDe(f?: Fornecedor) {
   const imps = f?.materiais.filter((m) => m.tipo === 'impressao') || []
   const imp = imps.find((m) => /vinil de wrap/i.test(m.nome)) || imps[0]
@@ -96,7 +96,7 @@ export function RequisicaoForm({ trabalho: trab0, r, onClose, preset }: { trabal
       if (!itens.length) { toast('Adicione pelo menos um item'); return null }
       return { ...x, itens }
     }
-    // Keep QT 0 rows like his sheet does (PRINT_6/7 with Qt. 0), but need some m².
+    // Keep QT 0 rows like the company's sheet does (PRINT_6/7 with Qt. 0), but need some m².
     const linhas = x.linhas.filter((l) => l.ficheiro.trim() || l.largura || l.comprimento)
     if (!linhas.some((l) => m2Linha(l) > 0)) { toast('Adicione pelo menos um print com medidas'); return null }
     return { ...x, linhas: linhas.map((l, i) => ({ ...l, ficheiro: l.ficheiro || `${x.nomeTrabalho}_PRINT_${i + 1}` })) }
@@ -396,7 +396,7 @@ function Circuito({ f, tot, trabalho, persistir }: { f: Requisicao; tot: ReturnT
           </div>
         ) : (
           <div className="form-grid">
-            <Field label="Nº da pró-forma"><input value={pf.numero} onChange={(e) => setPf({ ...pf, numero: e.target.value })} placeholder="8959/2026" /></Field>
+            <Field label="Nº da pró-forma"><input value={pf.numero} onChange={(e) => setPf({ ...pf, numero: e.target.value })} placeholder="0000/2026" /></Field>
             <Field label="Data"><input type="date" value={pf.data} onChange={(e) => setPf({ ...pf, data: e.target.value })} /></Field>
             <Field label="Valor total (com IVA)" hint={Math.abs(diff) < 0.5 ? 'Igual à lista ✓' : `Lista: ${mt(tot.total)} · diferença ${mt(diff)}`}><input inputMode="decimal" value={pf.valor} onChange={(e) => setPf({ ...pf, valor: e.target.value })} /></Field>
             <div className="field">
@@ -488,13 +488,13 @@ function Circuito({ f, tot, trabalho, persistir }: { f: Requisicao; tot: ReturnT
             <DocChip doc={fatDoc} onRemove={async () => { await apagar(db.documentos, fatDoc.id); await persistir({ faturaDocId: undefined }) }} />
           ) : (
             <div className="form-grid">
-              <Field label="Nº da fatura"><input value={fat.numero} onChange={(e) => setFat({ ...fat, numero: e.target.value })} placeholder="2960/2026" /></Field>
+              <Field label="Nº da fatura"><input value={fat.numero} onChange={(e) => setFat({ ...fat, numero: e.target.value })} placeholder="0000/2026" /></Field>
               <Field label="Data"><input type="date" value={fat.data} onChange={(e) => setFat({ ...fat, data: e.target.value })} /></Field>
               <div className="field full">
                 <span>Ficheiro (fatura, ou fatura + recibo no mesmo PDF)</span>
                 {fat.ficheiroId ? <Thumb id={fat.ficheiroId} onRemove={() => setFat({ ...fat, ficheiroId: undefined })} /> : <UploadZone multiple={false} text={lendo ? 'A ler…' : 'Carregar a fatura (PDF ou foto)'} onFiles={(fs) => carregarLido(fs, 'fatura')} />}
               </div>
-              <Field label="Nº do recibo (se já tiver)"><input value={rec.numero} onChange={(e) => setRec({ ...rec, numero: e.target.value })} placeholder="5473/2026" /></Field>
+              <Field label="Nº do recibo (se já tiver)"><input value={rec.numero} onChange={(e) => setRec({ ...rec, numero: e.target.value })} placeholder="0000/2026" /></Field>
               <Field label="Data do recibo"><input type="date" value={rec.data} onChange={(e) => setRec({ ...rec, data: e.target.value })} /></Field>
               <div className="full row">
                 <span className="tiny muted" style={{ flex: 1 }}>Valor {mt(valor)} · IVA {mt(r2(valor - (f.comIva ? baseDeTotal(valor, taxa) : valor)))} entra no IVA dedutível de {dataMedia(fat.data).split(' ').slice(1).join(' ')}.</span>
@@ -506,7 +506,7 @@ function Circuito({ f, tot, trabalho, persistir }: { f: Requisicao; tot: ReturnT
             <DocChip doc={recDoc} onRemove={async () => { await apagar(db.documentos, recDoc.id); await persistir({ reciboDocId: undefined }) }} />
           ) : (
             <div className="form-grid">
-              <Field label="Nº do recibo"><input value={rec.numero} onChange={(e) => setRec({ ...rec, numero: e.target.value })} placeholder="5473/2026" /></Field>
+              <Field label="Nº do recibo"><input value={rec.numero} onChange={(e) => setRec({ ...rec, numero: e.target.value })} placeholder="0000/2026" /></Field>
               <Field label="Data"><input type="date" value={rec.data} onChange={(e) => setRec({ ...rec, data: e.target.value })} /></Field>
               <label className="check full"><input type="checkbox" checked={rec.mesmo} onChange={(e) => setRec({ ...rec, mesmo: e.target.checked })} /> Vem no mesmo ficheiro da fatura</label>
               {!rec.mesmo && <div className="full">{rec.ficheiroId ? <Thumb id={rec.ficheiroId} onRemove={() => setRec({ ...rec, ficheiroId: undefined })} /> : <UploadZone multiple={false} text="Ficheiro do recibo" onFiles={async (fs) => fs[0] && setRec({ ...rec, ficheiroId: await guardarFicheiro(fs[0]) })} />}</div>}

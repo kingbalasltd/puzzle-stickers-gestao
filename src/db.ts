@@ -69,10 +69,10 @@ export interface Servico extends Base {
   diasMax: number
   inclui: string[]
   ativo: boolean
-  ordem?: number // position in his printed catálogo
+  ordem?: number // position in the company's printed catálogo
 }
 
-// Momad's phases (16 Oct): Pedido → Em negociação → Layout → Produção → Montagem → Entrega.
+// Job phases (16 Oct): Pedido → Em negociação → Layout → Produção → Montagem → Entrega.
 // 'entregue' is the job once the Entrega button was pressed.
 export type Etapa = 'pedido' | 'negociacao' | 'layout' | 'producao' | 'montagem' | 'entrega' | 'entregue'
 
@@ -182,7 +182,7 @@ export interface ProForma {
   ficheiroId?: string
 }
 
-// The supplier cycle he described: list → pró-forma → paid (or on credit) →
+// The supplier cycle: list → pró-forma → paid (or on credit) →
 // fatura + recibo → collected. Each step is optional and dated.
 export interface Requisicao extends Base {
   numero: string
@@ -275,12 +275,12 @@ export interface Despesa extends Base {
   documento?: 'fatura' | 'venda-dinheiro' | 'recibo' | 'nenhum' // what the shop handed over
   numeroDoc?: string
   pessoal?: boolean // the owner's personal spending with company money (leaves the caixa, not a cost)
-  // How it was settled (Momad, 18 Oct): paid back to the company, or accepted as his own use.
+  // How it was settled (18 Oct): paid back to the company, or accepted as the owner's own use.
   pessoalEstado?: 'reposto' | 'autorizado'
   pessoalEm?: string // date it was paid back / authorised
 }
 
-// A material printed under a quote item, as in Momad's quotes: the name in red, then
+// A material printed under a quote item, as in the company's quotes: the name in red, then
 // "- Certificado" / "- Não Certificado" and the brand's lifespan (17 Oct).
 export interface MaterialCotacao {
   nome: string
@@ -300,7 +300,7 @@ export interface ItemCotacao {
   // Alternatives the client chooses from (Taksim / Mactac / Avery, or packages). Items without
   // an option go into every option's total.
   opcao?: number
-  secao?: boolean // a heading row (e.g. PROJECTO GESTÃO MENSAL): only the title prints
+  secao?: boolean // a heading row (e.g. SERVIÇOS MENSAIS): only the title prints
   extra?: boolean // a charge such as Deslocação: goes with the job, never becomes a job of its own
   urgente?: boolean // taxa de urgência on this item only, printed as its own line after it
   gerada?: boolean // a line the app writes (the urgency line); never saved
@@ -341,7 +341,7 @@ export interface Nuvem {
   esquema?: number // data layout this device last pulled with (see nuvem.ts ESQUEMA)
 }
 
-// Daily report written by a worker (or by Momad himself).
+// Daily report written by a worker (or by the owner).
 export interface Relatorio extends Base {
   data: string
   utilizadorId: string
@@ -386,7 +386,7 @@ export interface Empresa {
   notaCotacao: string
   updatedAt: string
   seedVersao?: number
-  caixa?: { valor: number; data: string; em: string } // the real balance he typed once ("acertar caixa")
+  caixa?: { valor: number; data: string; em: string } // the real balance entered once ("acertar caixa")
 }
 
 class PuzzleDB extends Dexie {
